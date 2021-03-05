@@ -3,4 +3,5 @@
     <string name="my_books">My books</string>
     <string name="find_a_book">Find a book</string>
     <string name="cover">Cover</string>
+    <string name="add_book">Add book</string>
 </resources>
