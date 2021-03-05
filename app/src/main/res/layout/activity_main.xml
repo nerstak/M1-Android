@@ -9,19 +9,10 @@
     android:orientation="vertical"
     tools:context=".MainActivity" >
 
-    <Button
-        android:id="@+id/button_findBook"
-        android:layout_width="178dp"
+    <GridView
+        android:id="@+id/grid_view"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="5dp"
-        android:text="@string/find_a_book"
-        />
-
-    <Button
-        android:id="@+id/button_myBooks"
-        android:layout_width="178dp"
-        android:layout_height="match_parent"
-        android:layout_margin="5dp"
-        android:text="@string/my_books" />
+        android:numColumns="2" />
 
 </LinearLayout>
