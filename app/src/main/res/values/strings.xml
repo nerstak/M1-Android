@@ -2,4 +2,7 @@
     <string name="app_name">BooksApp</string>
     <string name="my_books">My books</string>
     <string name="find_a_book">Find a book</string>
+    <string name="cover">Cover</string>
+    <string name="add_book">Add book</string>
+    <string name="basic_book_info">%1$s - %2$s</string>
 </resources>
