@@ -29,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // TODO: Remove this once we can add book through app
         AsyncAddSingleBook a = new AsyncAddSingleBook(new WeakReference<>(getApplicationContext()), "oGeiDwAAQBAJ", getResources().getString(R.string.CONSUMER_KEY));
         a.execute();
 
@@ -78,7 +79,9 @@ public class MainActivity extends AppCompatActivity {
             File file = new File(context.getCacheDir(), bookEntity.id);
             imageView.setImageBitmap(BitmapFactory.decodeFile(file.getAbsolutePath()));
 
-            textView.setText(bookEntity.title);
+            textView.setText(
+                    context.getResources().getString(
+                            R.string.basic_book_info, bookEntity.title,bookEntity.author));
 
             return convertView;
         }
