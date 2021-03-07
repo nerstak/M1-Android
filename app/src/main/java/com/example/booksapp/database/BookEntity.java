@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity
@@ -30,7 +31,7 @@ public class BookEntity {
     @ColumnInfo(name = "resume")
     public String resume;
 
-    public BookEntity(String id, String title, String author, int pageCount, int pageRead, String status, String resume) {
+    public BookEntity(@NonNull String id, String title, String author, int pageCount, int pageRead, String status, String resume) {
         this.id = id;
         this.title = title;
         this.author = author;
@@ -38,5 +39,12 @@ public class BookEntity {
         this.pageRead = pageRead;
         this.status = status;
         this.resume = resume;
+    }
+
+    @Ignore
+    public BookEntity(@NonNull String id) {
+        this.id = id;
+        this.pageRead = 0;
+        this.status = StatusBook.Unknown.toString();
     }
 }

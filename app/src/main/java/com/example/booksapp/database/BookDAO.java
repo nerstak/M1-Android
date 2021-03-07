@@ -20,4 +20,7 @@ public interface BookDAO {
 
     @Delete
     void delete(BookEntity book);
+
+    @Query("DELETE FROM bookentity WHERE id = :idBook")
+    void delete(String idBook);
 }
