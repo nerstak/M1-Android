@@ -23,6 +23,8 @@ import java.net.URL;
 public class AsyncBitmapDownloader extends AsyncTask<String, Void, Bitmap> {
     private final WeakReference<Context> contextViewWeakReference;
     private final String idBook;
+    private final static String urlBasis = "http://books.google.com/books/publisher/content?id=";
+    private final static String urlParam = "&printsec=frontcover&img=1&zoom=5";
 
     public AsyncBitmapDownloader(WeakReference<Context> contextViewWeakReference, String idBook) {
         this.contextViewWeakReference = contextViewWeakReference;
@@ -33,7 +35,7 @@ public class AsyncBitmapDownloader extends AsyncTask<String, Void, Bitmap> {
     protected Bitmap doInBackground(String... strings) {
         URL url = null;
         try {
-            url = new URL(strings[0]);
+            url = new URL(urlBasis + idBook + urlParam);
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
 
             Bitmap bm = null;

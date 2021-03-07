@@ -5,6 +5,8 @@ import androidx.room.Room;
 
 import android.content.Context;
 import android.graphics.BitmapFactory;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
 
         // TODO: Remove this once we can add book through app
         AsyncAddSingleBook a = new AsyncAddSingleBook(new WeakReference<>(getApplicationContext()), "oGeiDwAAQBAJ", getResources().getString(R.string.CONSUMER_KEY));
-        a.execute();
+        //a.execute();
 
         MyGridAdapter myGridAdapter = new MyGridAdapter(this);
         GridView gridView = findViewById(R.id.grid_view);
@@ -75,9 +77,14 @@ public class MainActivity extends AppCompatActivity {
             ImageView imageView = convertView.findViewById(R.id.bitmap_image_view);
             TextView textView = convertView.findViewById(R.id.basic_book_info);
 
-            // Todo: Check if file is present and download it if missing (with internet connection)
             File file = new File(context.getCacheDir(), bookEntity.id);
-            imageView.setImageBitmap(BitmapFactory.decodeFile(file.getAbsolutePath()));
+            if(file.exists()) {
+                imageView.setImageBitmap(BitmapFactory.decodeFile(file.getAbsolutePath()));
+            } else if(isNetworkAvailable()){
+                AsyncBitmapDownloader downloader = new AsyncBitmapDownloader(new WeakReference<>(context), bookEntity.id);
+                downloader.execute();
+                notifyDataSetChanged();
+            }
 
             textView.setText(
                     context.getResources().getString(
@@ -89,5 +96,12 @@ public class MainActivity extends AppCompatActivity {
         public void addAll(List<BookEntity> list) {
             vector.addAll(list);
         }
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 }

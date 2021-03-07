@@ -20,8 +20,11 @@ import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.List;
 
+// TODO: Check if we have to keep this class at the end of the project
+/**
+ * Async task to download one book at the time
+ */
 public class AsyncAddSingleBook extends AsyncTask<String, Void, JSONObject> {
     private final WeakReference<Context> contextWeakReference;
     private final String idBook;
@@ -34,6 +37,9 @@ public class AsyncAddSingleBook extends AsyncTask<String, Void, JSONObject> {
         this.apiKey = apiKey;
     }
 
+
+
+    // TODO: Check if we can remove strings as input
     @Override
     protected JSONObject doInBackground(String... strings) {
         URL url = null;
@@ -55,7 +61,6 @@ public class AsyncAddSingleBook extends AsyncTask<String, Void, JSONObject> {
 
     @Override
     protected void onPostExecute(JSONObject jsonObject) {
-        Log.i("Karsto", String.valueOf(jsonObject));
         AsyncBitmapDownloader asyncBitmapDownloader = new AsyncBitmapDownloader(contextWeakReference, idBook);
         if (contextWeakReference != null) {
             Context context = contextWeakReference.get();
@@ -66,6 +71,8 @@ public class AsyncAddSingleBook extends AsyncTask<String, Void, JSONObject> {
                         .allowMainThreadQueries()
                         .fallbackToDestructiveMigration()
                         .build();
+
+                // TODO: Remove this one line
                 db.bookDAO().delete(idBook);
                 if (jsonObject != null) {
                     try {
@@ -75,9 +82,9 @@ public class AsyncAddSingleBook extends AsyncTask<String, Void, JSONObject> {
                         book.author = volumeInfo.getJSONArray("authors").getString(0);
                         book.resume = volumeInfo.getString("description");
                         book.title = volumeInfo.getString("title");
-                        String url = volumeInfo.getJSONObject("imageLinks").getString("smallThumbnail");
+//                        String url = volumeInfo.getJSONObject("imageLinks").getString("smallThumbnail");
 
-                        asyncBitmapDownloader.execute(url);
+                        asyncBitmapDownloader.execute(idBook);
 
                         db.bookDAO().insertAll(book);
                         db.close();
