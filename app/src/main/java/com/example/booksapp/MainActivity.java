@@ -12,11 +12,13 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.booksapp.database.BookDatabase;
 import com.example.booksapp.database.BookEntity;
 
 import java.io.File;
+import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.Vector;
 
@@ -27,12 +29,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        AsyncAddSingleBook a = new AsyncAddSingleBook(new WeakReference<>(getApplicationContext()), "oGeiDwAAQBAJ", getResources().getString(R.string.CONSUMER_KEY));
+        a.execute();
+
         MyGridAdapter myGridAdapter = new MyGridAdapter(this);
         GridView gridView = findViewById(R.id.grid_view);
         gridView.setAdapter(myGridAdapter);
 
         AsyncReadingMyBooks asyncReadingMyBooks = new AsyncReadingMyBooks(myGridAdapter, getApplicationContext());
-
+        asyncReadingMyBooks.execute();
 
     }
 
@@ -65,11 +70,15 @@ public class MainActivity extends AppCompatActivity {
                 convertView = LayoutInflater.from(context).inflate(R.layout.item_personal_book_layout, parent, false);
             }
 
-            String data = (String) ((BookEntity) getItem(position)).id;
+            BookEntity bookEntity = (BookEntity) (getItem(position));
             ImageView imageView = convertView.findViewById(R.id.bitmap_image_view);
+            TextView textView = convertView.findViewById(R.id.basic_book_info);
 
-            File file = new File(context.getCacheDir(), data);
+            // Todo: Check if file is present and download it if missing (with internet connection)
+            File file = new File(context.getCacheDir(), bookEntity.id);
             imageView.setImageBitmap(BitmapFactory.decodeFile(file.getAbsolutePath()));
+
+            textView.setText(bookEntity.title);
 
             return convertView;
         }
