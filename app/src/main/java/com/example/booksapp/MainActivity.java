@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.room.Room;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -89,6 +90,18 @@ public class MainActivity extends AppCompatActivity {
             textView.setText(
                     context.getResources().getString(
                             R.string.basic_book_info, bookEntity.title,bookEntity.author));
+
+            convertView.setClickable(true);
+            convertView.setOnClickListener(
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent bookActivity = new Intent(getApplicationContext(), ActivityBook.class);
+                            bookActivity.putExtra("bookID", bookEntity.id);
+                            startActivity(bookActivity);
+                        }
+                    }
+            );
 
             return convertView;
         }

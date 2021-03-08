@@ -15,6 +15,9 @@ public interface BookDAO {
     @Query("SELECT * FROM bookentity WHERE title LIKE :title")
     BookEntity findByName(String title);
 
+    @Query("SELECT * FROM bookentity WHERE id = :id")
+    BookEntity findByID(String id);
+
     @Insert
     void insertAll(BookEntity... books);
 
