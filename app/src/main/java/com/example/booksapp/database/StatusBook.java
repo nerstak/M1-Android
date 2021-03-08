@@ -22,4 +22,18 @@ public enum StatusBook {
     public String toString() {
         return this.name;
     }
+
+    /**
+     * Convert string to a StatusBook
+     * @param name String
+     * @return StatusBook, by default Unknown
+     */
+    public static StatusBook toStatus(String name) {
+        for(StatusBook status: StatusBook.values()) {
+            if(status.equalsName(name)) {
+                return status;
+            }
+        }
+        return Unknown;
+    }
 }

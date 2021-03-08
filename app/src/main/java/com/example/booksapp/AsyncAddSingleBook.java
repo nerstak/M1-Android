@@ -87,11 +87,11 @@ public class AsyncAddSingleBook extends AsyncTask<String, Void, JSONObject> {
                         asyncBitmapDownloader.execute(idBook);
 
                         db.bookDAO().insertAll(book);
-                        db.close();
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }
+                db.close();
             }
         }
     }
