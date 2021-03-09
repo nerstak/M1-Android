@@ -1,19 +1,18 @@
 package com.example.booksapp;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.room.Room;
 
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -28,6 +27,7 @@ import com.example.booksapp.database.StatusBook;
 public class ActivityBook extends AppCompatActivity {
     public BookEntity bookEntity;
     private String currentFragment = "info";
+    private Boolean pageEditFocus = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,15 +41,37 @@ public class ActivityBook extends AppCompatActivity {
         String bookID = extras.getString("bookID");
 
         BookDatabase db = DatabaseUtilities.getBookDatabase(getApplicationContext());
-
         bookEntity = db.bookDAO().findByID(bookID);
         db.close();
 
 
         setPageCount();
         setSpinner();
+        setButtons();
+        setPageViewEdit();
         setFragmentListener();
+    }
 
+    private void setButtons() {
+        ImageButton minusButton = findViewById(R.id.book_minus_page);
+        minusButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bookEntity.setPageRead(bookEntity.getPageRead() - 1);
+                updateBook();
+                setPageCount();
+            }
+        });
+
+        ImageButton plusButton = findViewById(R.id.book_plus_page);
+        plusButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bookEntity.setPageRead(bookEntity.getPageRead() + 1);
+                updateBook();
+                setPageCount();
+            }
+        });
     }
 
     /**
@@ -79,35 +101,31 @@ public class ActivityBook extends AppCompatActivity {
      * Set actual page count
      */
     private void setPageCount() {
-        TextView title = findViewById(R.id.input_page);
-        title.setText(String.valueOf(bookEntity.pageRead));
+        TextView page = findViewById(R.id.input_page);
+        page.setText(String.valueOf(bookEntity.getPageRead()));
     }
 
     /**
      * Set spinner values and default position
      */
     private void setSpinner() {
-        Spinner spinner = (Spinner) findViewById(R.id.spinner_status);
+        Spinner spinner = findViewById(R.id.spinner_status);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.status_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
 
-        spinner.setSelection(StatusBook.toStatus(bookEntity.status).ordinal());
+        spinner.setSelection(StatusBook.toStatus(bookEntity.getStatus()).ordinal());
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                bookEntity.status = StatusBook.values()[position].toString();
-                BookDatabase db = DatabaseUtilities.getBookDatabase(getApplicationContext());
-                db.bookDAO().update(bookEntity);
-                db.close();
+                bookEntity.setStatus(StatusBook.values()[position].toString());
+                updateBook();
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
+            public void onNothingSelected(AdapterView<?> parent) {}
         });
     }
 
@@ -127,6 +145,48 @@ public class ActivityBook extends AppCompatActivity {
                     setFragment(BookInfo.newInstance());
                     currentFragment = "info";
                 }
+            }
+        });
+    }
+
+    /**
+     * Update book in database
+     */
+    private void updateBook() {
+        BookDatabase db = DatabaseUtilities.getBookDatabase(getApplicationContext());
+        db.bookDAO().update(bookEntity);
+        db.close();
+    }
+
+    /**
+     * Set up text view edition of page read
+     */
+    private void setPageViewEdit() {
+        TextView page = findViewById(R.id.input_page);
+        page.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                // Only fire action when the user consider that he is done
+                if (actionId == EditorInfo.IME_ACTION_SEARCH ||
+                        actionId == EditorInfo.IME_ACTION_DONE ||
+                        event != null &&
+                                event.getAction() == KeyEvent.ACTION_DOWN &&
+                                event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+
+                    if (event == null || !event.isShiftPressed()) {
+                        String nbPage = page.getText().toString();
+                        try {
+                            bookEntity.setPageRead(Integer.parseInt(nbPage));
+                            updateBook();
+                        } catch (NumberFormatException e) {
+                            e.printStackTrace();
+                        }
+                        setPageCount();
+
+                        return true;
+                    }
+                }
+                return false;
             }
         });
     }

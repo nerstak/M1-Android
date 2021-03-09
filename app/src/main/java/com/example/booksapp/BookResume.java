@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.text.HtmlCompat;
 import androidx.fragment.app.Fragment;
 
 import android.text.Html;
@@ -13,6 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import static androidx.core.text.HtmlCompat.FROM_HTML_MODE_COMPACT;
 
 /**
  * Fragment for book resume
@@ -52,6 +55,6 @@ public class BookResume extends Fragment {
     private void setResume() {
         TextView resume = activity.findViewById(R.id.resume_book);
 
-        resume.setText(Html.fromHtml(activity.bookEntity.resume));
+        resume.setText(HtmlCompat.fromHtml(activity.bookEntity.getResume(), FROM_HTML_MODE_COMPACT));
     }
 }

@@ -62,7 +62,7 @@ public class BookInfo extends Fragment {
     private void setCover() {
         ImageView cover = activity.findViewById(R.id.cover_book_info);
 
-        File file = new File(activity.getCacheDir(), activity.bookEntity.id);
+        File file = new File(activity.getCacheDir(), activity.bookEntity.getId());
         if (file.exists()) {
             Bitmap b = BitmapFactory.decodeFile(file.getAbsolutePath());
 
@@ -77,7 +77,7 @@ public class BookInfo extends Fragment {
      */
     private void setTitle() {
         TextView title = activity.findViewById(R.id.title_book);
-        title.setText(activity.bookEntity.title);
+        title.setText(activity.bookEntity.getTitle());
     }
 
     /**
@@ -85,7 +85,7 @@ public class BookInfo extends Fragment {
      */
     private void setAuthor() {
         TextView author = activity.findViewById(R.id.author_book);
-        author.setText(activity.bookEntity.author);
+        author.setText(activity.bookEntity.getAuthor());
     }
 
     /**
@@ -93,6 +93,6 @@ public class BookInfo extends Fragment {
      */
     private void setPage() {
         TextView page = activity.findViewById(R.id.page_book);
-        page.setText(activity.getResources().getString(R.string.pages_numbering, activity.bookEntity.pageCount));
+        page.setText(activity.getResources().getString(R.string.pages_numbering, activity.bookEntity.getPageCount()));
     }
 }

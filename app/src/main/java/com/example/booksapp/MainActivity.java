@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
 
         // TODO: Remove this once we can add book through app
         AsyncAddSingleBook a = new AsyncAddSingleBook(new WeakReference<>(getApplicationContext()), "oGeiDwAAQBAJ", getResources().getString(R.string.CONSUMER_KEY));
-        //a.execute();
+//        a.execute();
 
         MyGridAdapter myGridAdapter = new MyGridAdapter(this);
         GridView gridView = findViewById(R.id.grid_view);
@@ -78,18 +78,18 @@ public class MainActivity extends AppCompatActivity {
             ImageView imageView = convertView.findViewById(R.id.bitmap_image_view);
             TextView textView = convertView.findViewById(R.id.basic_book_info);
 
-            File file = new File(context.getCacheDir(), bookEntity.id);
+            File file = new File(context.getCacheDir(), bookEntity.getId());
             if(file.exists()) {
                 imageView.setImageBitmap(BitmapFactory.decodeFile(file.getAbsolutePath()));
             } else if(isNetworkAvailable()){
-                AsyncBitmapDownloader downloader = new AsyncBitmapDownloader(new WeakReference<>(context), bookEntity.id);
+                AsyncBitmapDownloader downloader = new AsyncBitmapDownloader(new WeakReference<>(context), bookEntity.getId());
                 downloader.execute();
                 notifyDataSetChanged();
             }
 
             textView.setText(
                     context.getResources().getString(
-                            R.string.basic_book_info, bookEntity.title,bookEntity.author));
+                            R.string.basic_book_info, bookEntity.getTitle(),bookEntity.getAuthor()));
 
             convertView.setClickable(true);
             convertView.setOnClickListener(
@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void onClick(View v) {
                             Intent bookActivity = new Intent(getApplicationContext(), ActivityBook.class);
-                            bookActivity.putExtra("bookID", bookEntity.id);
+                            bookActivity.putExtra("bookID", bookEntity.getId());
                             startActivity(bookActivity);
                         }
                     }
