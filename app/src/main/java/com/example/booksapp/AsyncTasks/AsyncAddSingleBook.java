@@ -7,6 +7,7 @@ import androidx.room.Room;
 
 import com.example.booksapp.database.BookDatabase;
 import com.example.booksapp.database.BookEntity;
+import com.example.booksapp.database.DatabaseUtilities;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -66,11 +67,7 @@ public class AsyncAddSingleBook extends AsyncTask<Void, Void, JSONObject> {
             Context context = contextWeakReference.get();
 
             if (context != null) {
-                BookDatabase db = Room.databaseBuilder(context,
-                        BookDatabase.class, "BookDatabase")
-                        .allowMainThreadQueries()
-                        .fallbackToDestructiveMigration()
-                        .build();
+                BookDatabase db = DatabaseUtilities.getBookDatabase(context);
 
                 // TODO: Remove this one line
                 db.bookDAO().delete(idBook);

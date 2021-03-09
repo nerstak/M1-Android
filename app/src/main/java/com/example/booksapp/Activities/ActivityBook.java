@@ -15,6 +15,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.booksapp.Fragments.BookInfo;
 import com.example.booksapp.Fragments.BookResume;
@@ -178,12 +179,18 @@ public class ActivityBook extends AppCompatActivity {
 
                     if (event == null || !event.isShiftPressed()) {
                         String nbPage = page.getText().toString();
+                        String message = "Given number is not possible";
                         try {
-                            bookEntity.setPageRead(Integer.parseInt(nbPage));
-                            updateBook();
+                            if(bookEntity.setPageRead(Integer.parseInt(nbPage))) {
+                                updateBook();
+                                message = "Page number updated";
+                            }
                         } catch (NumberFormatException e) {
                             e.printStackTrace();
                         }
+                        Toast.makeText(getApplicationContext(),
+                                message,
+                                Toast.LENGTH_SHORT).show();
                         setPageCount();
 
                         return true;

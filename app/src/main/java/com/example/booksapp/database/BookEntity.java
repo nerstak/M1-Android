@@ -77,22 +77,22 @@ public class BookEntity {
         return pageCount;
     }
 
-    public boolean setPageCount(int pageCount) {
+    public void setPageCount(int pageCount) {
         if(pageCount > 0) {
             this.pageCount = pageCount;
-            return true;
         }
-        return false;
     }
 
     public int getPageRead() {
         return pageRead;
     }
 
-    public void setPageRead(int pageRead) {
+    public boolean setPageRead(int pageRead) {
         if(pageRead >= 0 &&  pageRead <= this.pageCount) {
             this.pageRead = pageRead;
+            return true;
         }
+        return false;
     }
 
     public String getStatus() {
