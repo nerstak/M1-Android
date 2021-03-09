@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.Spinner;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 
 import com.example.booksapp.database.BookDatabase;
 import com.example.booksapp.database.BookEntity;
+import com.example.booksapp.database.DatabaseUtilities;
 import com.example.booksapp.database.StatusBook;
 
 /**
@@ -38,11 +40,7 @@ public class ActivityBook extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         String bookID = extras.getString("bookID");
 
-        BookDatabase db = Room.databaseBuilder(getApplicationContext(),
-                BookDatabase.class, "BookDatabase")
-                .allowMainThreadQueries()
-                .fallbackToDestructiveMigration()
-                .build();
+        BookDatabase db = DatabaseUtilities.getBookDatabase(getApplicationContext());
 
         bookEntity = db.bookDAO().findByID(bookID);
         db.close();
@@ -96,6 +94,21 @@ public class ActivityBook extends AppCompatActivity {
         spinner.setAdapter(adapter);
 
         spinner.setSelection(StatusBook.toStatus(bookEntity.status).ordinal());
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                bookEntity.status = StatusBook.values()[position].toString();
+                BookDatabase db = DatabaseUtilities.getBookDatabase(getApplicationContext());
+                db.bookDAO().update(bookEntity);
+                db.close();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 
     /**
