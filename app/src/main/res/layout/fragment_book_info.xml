@@ -5,8 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:gravity="center"
-    android:layout_margin="2dp">
+>
 
     <ImageView
         android:id="@+id/cover_book_info"

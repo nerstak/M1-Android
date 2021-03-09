@@ -10,7 +10,10 @@
     <FrameLayout
         android:id="@+id/container_book"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_margin="2dp"
+        />
 
     <LinearLayout
         android:layout_width="match_parent"

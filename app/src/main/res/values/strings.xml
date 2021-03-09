@@ -8,4 +8,6 @@
     <string name="pages_numbering">%1d pages</string>
     <string name="plus">+</string>
     <string name="minus">-</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

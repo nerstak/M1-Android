@@ -1,13 +1,18 @@
 package com.example.booksapp;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.room.Room;
 
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -20,6 +25,7 @@ import com.example.booksapp.database.StatusBook;
  */
 public class ActivityBook extends AppCompatActivity {
     public BookEntity bookEntity;
+    private String currentFragment = "info";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +50,8 @@ public class ActivityBook extends AppCompatActivity {
 
         setPageCount();
         setSpinner();
+        setFragmentListener();
+
     }
 
     /**
@@ -64,10 +72,9 @@ public class ActivityBook extends AppCompatActivity {
      * @param fragment Fragment
      */
     public void setFragment(Fragment fragment) {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(R.id.container_book, fragment)
-                .commit();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.container_book, fragment);
+        transaction.commit();
     }
 
     /**
@@ -89,5 +96,25 @@ public class ActivityBook extends AppCompatActivity {
         spinner.setAdapter(adapter);
 
         spinner.setSelection(StatusBook.toStatus(bookEntity.status).ordinal());
+    }
+
+    /**
+     * Listener to switch between fragments
+     */
+    private void setFragmentListener() {
+        FrameLayout frame = findViewById(R.id.container_book);
+        frame.setClickable(true);
+        frame.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(currentFragment.equals("info")) {
+                    setFragment(BookResume.newInstance());
+                    currentFragment = "resume";
+                } else if (currentFragment.equals("resume")) {
+                    setFragment(BookInfo.newInstance());
+                    currentFragment = "info";
+                }
+            }
+        });
     }
 }
