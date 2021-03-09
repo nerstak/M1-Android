@@ -1,8 +1,7 @@
-package com.example.booksapp;
+package com.example.booksapp.AsyncTasks;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import androidx.room.Room;
 

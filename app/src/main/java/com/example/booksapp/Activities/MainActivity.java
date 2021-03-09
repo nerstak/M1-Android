@@ -1,7 +1,6 @@
-package com.example.booksapp;
+package com.example.booksapp.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.room.Room;
 
 import android.content.Context;
 import android.content.Intent;
@@ -17,7 +16,10 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.booksapp.database.BookDatabase;
+import com.example.booksapp.AsyncTasks.AsyncAddSingleBook;
+import com.example.booksapp.AsyncTasks.AsyncBitmapDownloader;
+import com.example.booksapp.AsyncTasks.AsyncReadingMyBooks;
+import com.example.booksapp.R;
 import com.example.booksapp.database.BookEntity;
 
 import java.io.File;

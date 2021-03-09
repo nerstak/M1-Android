@@ -1,4 +1,4 @@
-package com.example.booksapp;
+package com.example.booksapp.Fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -8,12 +8,13 @@ import androidx.annotation.Nullable;
 import androidx.core.text.HtmlCompat;
 import androidx.fragment.app.Fragment;
 
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.example.booksapp.Activities.ActivityBook;
+import com.example.booksapp.R;
 
 import static androidx.core.text.HtmlCompat.FROM_HTML_MODE_COMPACT;
 

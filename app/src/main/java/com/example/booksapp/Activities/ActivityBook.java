@@ -1,4 +1,4 @@
-package com.example.booksapp;
+package com.example.booksapp.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -16,6 +16,9 @@ import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.example.booksapp.Fragments.BookInfo;
+import com.example.booksapp.Fragments.BookResume;
+import com.example.booksapp.R;
 import com.example.booksapp.database.BookDatabase;
 import com.example.booksapp.database.BookEntity;
 import com.example.booksapp.database.DatabaseUtilities;

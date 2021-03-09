@@ -1,4 +1,4 @@
-package com.example.booksapp;
+package com.example.booksapp.Fragments;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -15,8 +15,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.booksapp.Activities.ActivityBook;
+import com.example.booksapp.R;
+
 import java.io.File;
-import java.lang.ref.WeakReference;
 
 /**
  *  Fragment holding most information on book
