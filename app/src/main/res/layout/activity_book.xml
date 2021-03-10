@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Activities.ActivityBook"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:id="@+id/container_book"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_margin="2dp"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center" >
+
+        <Spinner
+            android:id="@+id/spinner_status"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+
+        <ImageButton
+            android:id="@+id/book_minus_page"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/minus_thick"
+            android:contentDescription="@string/minus" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/input_page"
+            android:autofillHints=""
+            android:inputType="number"
+            tools:ignore="LabelFor" />
+
+        <ImageButton
+            android:id="@+id/book_plus_page"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/plus_thick"
+            android:contentDescription="@string/plus" />
+
+    </LinearLayout>
+
+</LinearLayout>

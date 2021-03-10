@@ -5,4 +5,10 @@
     <string name="cover">Cover</string>
     <string name="add_book">Add book</string>
     <string name="basic_book_info">%1$s - %2$s</string>
+    <string name="pages_numbering">%1d pages</string>
+    <string name="plus">+</string>
+    <string name="minus">-</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="action_delete_book">Delete book</string>
 </resources>

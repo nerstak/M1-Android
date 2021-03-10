@@ -1,13 +1,13 @@
-package com.example.booksapp;
+package com.example.booksapp.AsyncTasks;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import androidx.room.Room;
 
 import com.example.booksapp.database.BookDatabase;
 import com.example.booksapp.database.BookEntity;
+import com.example.booksapp.database.DatabaseUtilities;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,7 +25,7 @@ import java.net.URL;
 /**
  * Async task to download one book at the time
  */
-public class AsyncAddSingleBook extends AsyncTask<String, Void, JSONObject> {
+public class AsyncAddSingleBook extends AsyncTask<Void, Void, JSONObject> {
     private final WeakReference<Context> contextWeakReference;
     private final String idBook;
     private final static String urlBasis = "https://www.googleapis.com/books/v1/volumes/";
@@ -41,7 +41,7 @@ public class AsyncAddSingleBook extends AsyncTask<String, Void, JSONObject> {
 
     // TODO: Check if we can remove strings as input
     @Override
-    protected JSONObject doInBackground(String... strings) {
+    protected JSONObject doInBackground(Void... voids) {
         URL url = null;
         try {
             url = new URL(urlBasis + idBook + "?key=" + apiKey);
@@ -59,6 +59,7 @@ public class AsyncAddSingleBook extends AsyncTask<String, Void, JSONObject> {
         return null;
     }
 
+
     @Override
     protected void onPostExecute(JSONObject jsonObject) {
         AsyncBitmapDownloader asyncBitmapDownloader = new AsyncBitmapDownloader(contextWeakReference, idBook);
@@ -66,11 +67,7 @@ public class AsyncAddSingleBook extends AsyncTask<String, Void, JSONObject> {
             Context context = contextWeakReference.get();
 
             if (context != null) {
-                BookDatabase db = Room.databaseBuilder(context,
-                        BookDatabase.class, "BookDatabase")
-                        .allowMainThreadQueries()
-                        .fallbackToDestructiveMigration()
-                        .build();
+                BookDatabase db = DatabaseUtilities.getBookDatabase(context);
 
                 // TODO: Remove this one line
                 db.bookDAO().delete(idBook);
@@ -79,19 +76,19 @@ public class AsyncAddSingleBook extends AsyncTask<String, Void, JSONObject> {
                         BookEntity book = new BookEntity(idBook);
 
                         JSONObject volumeInfo = jsonObject.getJSONObject("volumeInfo");
-                        book.author = volumeInfo.getJSONArray("authors").getString(0);
-                        book.resume = volumeInfo.getString("description");
-                        book.title = volumeInfo.getString("title");
-//                        String url = volumeInfo.getJSONObject("imageLinks").getString("smallThumbnail");
+                        book.setAuthor(volumeInfo.getJSONArray("authors").getString(0));
+                        book.setResume(volumeInfo.getString("description"));
+                        book.setTitle(volumeInfo.getString("title"));
+                        book.setPageCount(Integer.parseInt(volumeInfo.getString("pageCount")));
 
                         asyncBitmapDownloader.execute(idBook);
 
                         db.bookDAO().insertAll(book);
-                        db.close();
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }
+                db.close();
             }
         }
     }

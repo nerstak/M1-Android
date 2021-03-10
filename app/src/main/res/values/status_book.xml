@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="status_array">
+        <item>Unknown</item>
+        <item>Reading</item>
+        <item>On hold</item>
+        <item>Plan to read</item>
+        <item>Dropped</item>
+        <item>Re-reading</item>
+    </string-array>
+</resources>
