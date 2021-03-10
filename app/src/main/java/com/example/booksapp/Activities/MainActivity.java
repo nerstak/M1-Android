@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // TODO: Remove this once we can add book through app
-        AsyncAddSingleBook a = new AsyncAddSingleBook(new WeakReference<>(getApplicationContext()), "oGeiDwAAQBAJ", getResources().getString(R.string.CONSUMER_KEY));
+        AsyncAddSingleBook a = new AsyncAddSingleBook(new WeakReference<>(getApplicationContext()), "oGeiDwAAQBAJ", true, getResources().getString(R.string.CONSUMER_KEY));
         a.execute();
 
         myGridAdapter = new MyGridAdapter(this);
@@ -45,6 +45,9 @@ public class MainActivity extends AppCompatActivity {
         gridView.setAdapter(myGridAdapter);
     }
 
+    /**
+     * Adapter for GridView
+     */
     public class MyGridAdapter extends BaseAdapter {
         Context context;
         Vector<BookEntity> vector = new Vector<>();
@@ -78,16 +81,7 @@ public class MainActivity extends AppCompatActivity {
             ImageView imageView = convertView.findViewById(R.id.bitmap_image_view);
             TextView textView = convertView.findViewById(R.id.basic_book_info);
 
-            // TODO Maybe put this in a function if we have to load custom covers
-            File file = new File(context.getCacheDir(), bookEntity.getId());
-            if(file.exists()) {
-                Bitmap b = BitmapFactory.decodeFile(file.getAbsolutePath());
-                imageView.setImageBitmap(Bitmap.createScaledBitmap(b, b.getWidth() * 3, b.getHeight() * 3, true));
-            } else if(isNetworkAvailable()){
-                AsyncBitmapDownloader downloader = new AsyncBitmapDownloader(new WeakReference<>(context), bookEntity.getId());
-                downloader.execute();
-                notifyDataSetChanged();
-            }
+            loadCover(bookEntity, imageView);
 
             textView.setText(
                     context.getResources().getString(
@@ -108,16 +102,46 @@ public class MainActivity extends AppCompatActivity {
             return convertView;
         }
 
+        /**
+         * Add all elements to inner vector
+         * @param list Elements
+         */
         public void addAll(List<BookEntity> list) {
             vector.addAll(list);
         }
 
+        /**
+         * Set elements as new inner vectors
+         * @param list Elements
+         */
         public void setVector(List<BookEntity> list) {
             vector.clear();
             vector.addAll(list);
         }
+
+        /**
+         * Load correct cover
+         * @param bookEntity Book to load cover
+         * @param imageView ImageView for cover
+         */
+        private void loadCover(BookEntity bookEntity, ImageView imageView) {
+            File file = new File(context.getCacheDir(), bookEntity.getId());
+            if(file.exists()) {
+                Bitmap b = BitmapFactory.decodeFile(file.getAbsolutePath());
+                imageView.setImageBitmap(Bitmap.createScaledBitmap(b, b.getWidth() * 3, b.getHeight() * 3, true));
+            } else if(isNetworkAvailable()){
+                // We download the cover if it was missing
+                AsyncBitmapDownloader downloader = new AsyncBitmapDownloader(new WeakReference<>(context), bookEntity.getId());
+                downloader.execute();
+                notifyDataSetChanged();
+            }
+        }
     }
 
+    /**
+     * Check if network is available
+     * @return Boolean
+     */
     private boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -129,12 +153,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         if(myGridAdapter != null) {
-            loadDataIntoGrid();
+            AsyncReadingMyBooks asyncReadingMyBooks = new AsyncReadingMyBooks(myGridAdapter, getApplicationContext());
+            asyncReadingMyBooks.execute();
         }
-    }
-
-    private void loadDataIntoGrid() {
-        AsyncReadingMyBooks asyncReadingMyBooks = new AsyncReadingMyBooks(myGridAdapter, getApplicationContext());
-        asyncReadingMyBooks.execute();
     }
 }

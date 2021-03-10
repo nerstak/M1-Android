@@ -55,7 +55,13 @@ public class BookInfo extends Fragment {
         setTitle();
         setAuthor();
         setPage();
+        setDate();
         setCover();
+    }
+
+    private void setDate() {
+        TextView date = activity.findViewById(R.id.date_book);
+        date.setText(activity.getResources().getString(R.string.date_format,activity.bookEntity.getPublishDate()));
     }
 
     /**
