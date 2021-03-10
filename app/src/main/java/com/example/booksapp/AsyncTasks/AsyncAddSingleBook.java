@@ -21,7 +21,6 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-// TODO: Check if we have to keep this class at the end of the project
 /**
  * Async task to download one book at the time
  */
@@ -30,16 +29,15 @@ public class AsyncAddSingleBook extends AsyncTask<Void, Void, JSONObject> {
     private final String idBook;
     private final static String urlBasis = "https://www.googleapis.com/books/v1/volumes/";
     private final String apiKey;
+    private final boolean update;
 
-    public AsyncAddSingleBook(WeakReference<Context> contextWeakReference, String idBook, String apiKey) {
+    public AsyncAddSingleBook(WeakReference<Context> contextWeakReference, String idBook, Boolean update, String apiKey) {
         this.contextWeakReference = contextWeakReference;
         this.idBook = idBook;
         this.apiKey = apiKey;
+        this.update = update;
     }
 
-
-
-    // TODO: Check if we can remove strings as input
     @Override
     protected JSONObject doInBackground(Void... voids) {
         URL url = null;
@@ -69,21 +67,26 @@ public class AsyncAddSingleBook extends AsyncTask<Void, Void, JSONObject> {
             if (context != null) {
                 BookDatabase db = DatabaseUtilities.getBookDatabase(context);
 
-                // TODO: Remove this one line
-                db.bookDAO().delete(idBook);
                 if (jsonObject != null) {
                     try {
-                        BookEntity book = new BookEntity(idBook);
+                        boolean bookExists = true;
+                        BookEntity book = db.bookDAO().findByID(idBook);
+                        if(book == null) {
+                            bookExists = false;
+                            book = new BookEntity(idBook);
+                        }
 
-                        JSONObject volumeInfo = jsonObject.getJSONObject("volumeInfo");
-                        book.setAuthor(volumeInfo.getJSONArray("authors").getString(0));
-                        book.setResume(volumeInfo.getString("description"));
-                        book.setTitle(volumeInfo.getString("title"));
-                        book.setPageCount(Integer.parseInt(volumeInfo.getString("pageCount")));
+                        // If the book does not exists OR we allow the update of values
+                        if(!bookExists || update) {
+                            assignValues(book, jsonObject);
+                            asyncBitmapDownloader.execute(idBook);
 
-                        asyncBitmapDownloader.execute(idBook);
-
-                        db.bookDAO().insertAll(book);
+                            if(bookExists) {
+                                db.bookDAO().update(book);
+                            } else {
+                                db.bookDAO().insertAll(book);
+                            }
+                        }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -91,6 +94,21 @@ public class AsyncAddSingleBook extends AsyncTask<Void, Void, JSONObject> {
                 db.close();
             }
         }
+    }
+
+    /**
+     * Assign values from json to bookEntity
+     * @param book Book
+     * @param jsonObject JsonObject
+     * @throws JSONException Parsing error
+     */
+    private void assignValues(BookEntity book, JSONObject jsonObject) throws JSONException {
+        JSONObject volumeInfo = jsonObject.getJSONObject("volumeInfo");
+        book.setAuthor(volumeInfo.getJSONArray("authors").getString(0));
+        book.setResume(volumeInfo.getString("description"));
+        book.setTitle(volumeInfo.getString("title"));
+        book.setPageCount(Integer.parseInt(volumeInfo.getString("pageCount")));
+        book.setPublishDate(volumeInfo.getString("publishedDate"));
     }
 
     /**

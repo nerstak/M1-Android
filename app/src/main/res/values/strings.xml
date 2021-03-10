@@ -8,7 +8,6 @@
     <string name="pages_numbering">%1d pages</string>
     <string name="plus">+</string>
     <string name="minus">-</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="action_delete_book">Delete book</string>
+    <string name="date_format">Publication: %1s</string>
 </resources>

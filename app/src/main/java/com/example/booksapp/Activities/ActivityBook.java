@@ -59,6 +59,9 @@ public class ActivityBook extends AppCompatActivity {
         setFragmentListener();
     }
 
+    /**
+     * Setting up buttons and their listener
+     */
     private void setButtons() {
         ImageButton minusButton = findViewById(R.id.book_minus_page);
         minusButton.setOnClickListener(new View.OnClickListener() {
@@ -197,6 +200,7 @@ public class ActivityBook extends AppCompatActivity {
                         } catch (NumberFormatException e) {
                             e.printStackTrace();
                         }
+
                         Toast.makeText(getApplicationContext(),
                                 message,
                                 Toast.LENGTH_SHORT).show();
