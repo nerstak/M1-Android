@@ -5,7 +5,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -16,6 +18,7 @@ import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import com.example.booksapp.Fragments.BookInfo;
 import com.example.booksapp.Fragments.BookResume;
@@ -31,7 +34,6 @@ import com.example.booksapp.database.StatusBook;
 public class ActivityBook extends AppCompatActivity {
     public BookEntity bookEntity;
     private String currentFragment = "info";
-    private Boolean pageEditFocus = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +41,7 @@ public class ActivityBook extends AppCompatActivity {
         setContentView(R.layout.activity_book);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         setFragment(BookInfo.newInstance());
 
         Bundle extras = getIntent().getExtras();
@@ -86,6 +89,9 @@ public class ActivityBook extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item){
         if(item.getItemId() == android.R.id.home) {
             finish();
+            return true;
+        } else if(item.getItemId() == R.id.action_delete_book) {
+            Log.i("Karsto", "delete");
             return true;
         }
         return false;
@@ -199,5 +205,11 @@ public class ActivityBook extends AppCompatActivity {
                 return false;
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.book_menu, menu);
+        return super.onCreateOptionsMenu(menu);
     }
 }
