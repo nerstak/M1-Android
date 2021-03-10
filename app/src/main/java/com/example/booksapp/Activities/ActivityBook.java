@@ -91,7 +91,10 @@ public class ActivityBook extends AppCompatActivity {
             finish();
             return true;
         } else if(item.getItemId() == R.id.action_delete_book) {
-            Log.i("Karsto", "delete");
+            BookDatabase db = DatabaseUtilities.getBookDatabase(getApplicationContext());
+            db.bookDAO().delete(bookEntity);
+            db.close();
+            finish();
             return true;
         }
         return false;

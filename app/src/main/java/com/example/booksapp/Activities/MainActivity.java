@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Vector;
 
 public class MainActivity extends AppCompatActivity {
+    private MyGridAdapter myGridAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,15 +37,11 @@ public class MainActivity extends AppCompatActivity {
 
         // TODO: Remove this once we can add book through app
         AsyncAddSingleBook a = new AsyncAddSingleBook(new WeakReference<>(getApplicationContext()), "oGeiDwAAQBAJ", getResources().getString(R.string.CONSUMER_KEY));
-//        a.execute();
+        a.execute();
 
-        MyGridAdapter myGridAdapter = new MyGridAdapter(this);
+        myGridAdapter = new MyGridAdapter(this);
         GridView gridView = findViewById(R.id.grid_view);
         gridView.setAdapter(myGridAdapter);
-
-        AsyncReadingMyBooks asyncReadingMyBooks = new AsyncReadingMyBooks(myGridAdapter, getApplicationContext());
-        asyncReadingMyBooks.execute();
-
     }
 
     public class MyGridAdapter extends BaseAdapter {
@@ -111,6 +108,11 @@ public class MainActivity extends AppCompatActivity {
         public void addAll(List<BookEntity> list) {
             vector.addAll(list);
         }
+
+        public void setVector(List<BookEntity> list) {
+            vector.clear();
+            vector.addAll(list);
+        }
     }
 
     private boolean isNetworkAvailable() {
@@ -118,5 +120,18 @@ public class MainActivity extends AppCompatActivity {
                 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(myGridAdapter != null) {
+            loadDataIntoGrid();
+        }
+    }
+
+    private void loadDataIntoGrid() {
+        AsyncReadingMyBooks asyncReadingMyBooks = new AsyncReadingMyBooks(myGridAdapter, getApplicationContext());
+        asyncReadingMyBooks.execute();
     }
 }
