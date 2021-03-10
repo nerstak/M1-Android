@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -77,9 +78,11 @@ public class MainActivity extends AppCompatActivity {
             ImageView imageView = convertView.findViewById(R.id.bitmap_image_view);
             TextView textView = convertView.findViewById(R.id.basic_book_info);
 
+            // TODO Maybe put this in a function if we have to load custom covers
             File file = new File(context.getCacheDir(), bookEntity.getId());
             if(file.exists()) {
-                imageView.setImageBitmap(BitmapFactory.decodeFile(file.getAbsolutePath()));
+                Bitmap b = BitmapFactory.decodeFile(file.getAbsolutePath());
+                imageView.setImageBitmap(Bitmap.createScaledBitmap(b, b.getWidth() * 3, b.getHeight() * 3, true));
             } else if(isNetworkAvailable()){
                 AsyncBitmapDownloader downloader = new AsyncBitmapDownloader(new WeakReference<>(context), bookEntity.getId());
                 downloader.execute();

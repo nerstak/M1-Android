@@ -21,7 +21,6 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-// TODO: Check if we have to keep this class at the end of the project
 /**
  * Async task to download one book at the time
  */
@@ -37,9 +36,6 @@ public class AsyncAddSingleBook extends AsyncTask<Void, Void, JSONObject> {
         this.apiKey = apiKey;
     }
 
-
-
-    // TODO: Check if we can remove strings as input
     @Override
     protected JSONObject doInBackground(Void... voids) {
         URL url = null;
