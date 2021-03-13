@@ -12,4 +12,5 @@
     <string name="date_format">Publication: %1s</string>
     <string name="search_hint">Book Title - eg. Harry Potter</string>
     <string name="search_desc">Search: </string>
+    <string name="search_header">Google Books Results</string>
 </resources>
