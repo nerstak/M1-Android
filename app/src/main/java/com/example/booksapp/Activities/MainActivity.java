@@ -22,6 +22,7 @@ import com.example.booksapp.AsyncTasks.AsyncBitmapDownloader;
 import com.example.booksapp.AsyncTasks.AsyncReadingMyBooks;
 import com.example.booksapp.R;
 import com.example.booksapp.database.BookEntity;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -43,6 +44,14 @@ public class MainActivity extends AppCompatActivity {
         myGridAdapter = new MyGridAdapter(this);
         GridView gridView = findViewById(R.id.grid_view);
         gridView.setAdapter(myGridAdapter);
+
+        FloatingActionButton newBook = (FloatingActionButton) findViewById(R.id.add_button);
+        newBook.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onSearchRequested();
+            }
+        });
     }
 
     /**
