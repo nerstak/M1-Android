@@ -43,6 +43,8 @@ dependencies {
     implementation "androidx.room:room-runtime:$room_version"
     annotationProcessor "androidx.room:room-compiler:$room_version"
 
+    implementation 'com.android.volley:volley:1.2.0'
+
     // optional - RxJava support for Room
     implementation "androidx.room:room-rxjava2:$room_version"
 

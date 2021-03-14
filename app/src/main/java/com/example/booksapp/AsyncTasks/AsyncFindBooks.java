@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.example.booksapp.Activities.SearchBookActivity;
 import com.example.booksapp.database.BookDatabase;
 import com.example.booksapp.database.BookEntity;
 import com.example.booksapp.database.DatabaseUtilities;
@@ -26,9 +27,11 @@ import java.net.URL;
 public class AsyncFindBooks extends AsyncTask<String, Void, JSONObject> {
     private final static String urlBasis = "https://www.googleapis.com/books/v1/volumes";
     private final String apiKey;
+    private SearchBookActivity.MyListAdapter myListAdapter;
 
-    public AsyncFindBooks(String apiKey) {
+    public AsyncFindBooks(String apiKey, SearchBookActivity.MyListAdapter myListAdapter) {
         this.apiKey = apiKey;
+        this.myListAdapter = myListAdapter;
     }
 
     @Override
@@ -36,8 +39,11 @@ public class AsyncFindBooks extends AsyncTask<String, Void, JSONObject> {
         URL url = null;
         String query = strings[0].replace(' ', '+');
         try {
-            url = new URL(urlBasis + "?q" + query + "&key=" + apiKey);
+            url = new URL(urlBasis + "?q=" + query + "&key=" + apiKey);
+
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+
+            Log.i("teo", urlConnection.toString());
             try {
                 return handleResult(new BufferedInputStream(urlConnection.getInputStream()));
             } finally {
@@ -56,18 +62,29 @@ public class AsyncFindBooks extends AsyncTask<String, Void, JSONObject> {
     protected void onPostExecute(JSONObject jsonObject) {
         if (jsonObject != null) {
             try {
+                Log.i("teo", jsonObject.toString());
                 JSONArray books = jsonObject.getJSONArray("items");
 
                 int arrayLength = books.length();
 
-                BookEntity newBook;
                 // add each book
                 for (int i = 0; i < arrayLength; i++) {
-                    newBook = createBook(books.getJSONObject(i));
-                    //myAdapter.add(mewBook);
+                    JSONObject currBook = books.getJSONObject(i);
+                    BookEntity newBook = createBook(currBook);
+                    Log.i("teo", currBook.toString());
+
+                    String bookUrl=null;
+                    if(currBook.getJSONObject("volumeInfo").has("imageLinks"))
+                    {
+                        bookUrl = currBook.getJSONObject("volumeInfo")
+                                .getJSONObject("imageLinks").getString("thumbnail");
+                        Log.i("teo", bookUrl);
+                    }
+
+                    myListAdapter.add(newBook, bookUrl);
                 }
 
-                //myAdapter.notifyDataSetChanged();
+                myListAdapter.notifyDataSetChanged();
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -84,10 +101,14 @@ public class AsyncFindBooks extends AsyncTask<String, Void, JSONObject> {
     private BookEntity createBook(JSONObject jsonObject) throws JSONException {
         BookEntity book = new BookEntity(jsonObject.getString("id"));
         JSONObject volumeInfo = jsonObject.getJSONObject("volumeInfo");
-        book.setAuthor(volumeInfo.getJSONArray("authors").getString(0));
-        book.setResume(volumeInfo.getString("description"));
+
+        if(volumeInfo.has("authors")) {book.setAuthor(volumeInfo.getJSONArray("authors").getString(0));}
+            else {book.setAuthor("Author Unknown");}
+        if(volumeInfo.has("description")) {book.setResume(volumeInfo.getString("description"));}
+            else {book.setResume("No summary available.");}
+        if(volumeInfo.has("pageCount")) {book.setPageCount(Integer.parseInt(volumeInfo.getString("pageCount")));}
+            else {book.setPageCount(0);}
         book.setTitle(volumeInfo.getString("title"));
-        book.setPageCount(Integer.parseInt(volumeInfo.getString("pageCount")));
         book.setPublishDate(volumeInfo.getString("publishedDate"));
         return book;
     }
