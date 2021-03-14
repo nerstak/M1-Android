@@ -8,16 +8,15 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.booksapp.AsyncTasks.AsyncFindBooks;
 import com.example.booksapp.R;
-import com.example.booksapp.database.BookDatabase;
-import com.example.booksapp.database.DatabaseUtilities;
 
-public class SearchBook extends AppCompatActivity {
+public class SearchBookActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.search_book);
+        setContentView(R.layout.activity_search_book);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(R.string.search_header);
@@ -29,6 +28,8 @@ public class SearchBook extends AppCompatActivity {
         if (searchIntent.getAction().equals(Intent.ACTION_SEARCH)) {
             String bookQuery = searchIntent.getStringExtra(SearchManager.QUERY);
             searchQueryView.setText(bookQuery);
+            AsyncFindBooks findBooks = new AsyncFindBooks(getResources().getString(R.string.CONSUMER_KEY));
+            findBooks.execute(bookQuery);
         }
     }
 

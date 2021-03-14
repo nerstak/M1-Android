@@ -14,7 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BooksApp">
         <activity android:name=".Activities.ActivityBook"></activity>
-        <activity android:name=".Activities.SearchBook">
+        <activity android:name=".Activities.SearchBookActivity">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
@@ -28,7 +28,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <meta-data android:name="android.app.default_searchable"
-                android:value="com.example.booksapp.Activities.SearchBook" />
+                android:value="com.example.booksapp.Activities.SearchBookActivity" />
         </activity>
     </application>
 
