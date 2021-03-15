@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // TODO: Remove this once we can add book through app
-        AsyncAddSingleBook a = new AsyncAddSingleBook(new WeakReference<>(getApplicationContext()), "oGeiDwAAQBAJ", true, getResources().getString(R.string.CONSUMER_KEY));
+        AsyncAddSingleBook a = new AsyncAddSingleBook(new WeakReference<>(getApplicationContext()), "1-69DwAAQBAJ", true, getResources().getString(R.string.CONSUMER_KEY));
         a.execute();
 
         myGridAdapter = new MyGridAdapter(this);

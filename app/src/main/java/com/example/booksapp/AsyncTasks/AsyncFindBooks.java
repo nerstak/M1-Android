@@ -39,7 +39,7 @@ public class AsyncFindBooks extends AsyncTask<String, Void, JSONObject> {
         URL url = null;
         String query = strings[0].replace(' ', '+');
         try {
-            url = new URL(urlBasis + "?q=" + query + "&key=" + apiKey);
+            url = new URL(urlBasis + "?q=" + query + "&printType=books&maxResults=40&key=" + apiKey);
 
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
 
@@ -101,16 +101,20 @@ public class AsyncFindBooks extends AsyncTask<String, Void, JSONObject> {
     private BookEntity createBook(JSONObject jsonObject) throws JSONException {
         BookEntity book = new BookEntity(jsonObject.getString("id"));
         JSONObject volumeInfo = jsonObject.getJSONObject("volumeInfo");
-
         if(volumeInfo.has("authors")) {book.setAuthor(volumeInfo.getJSONArray("authors").getString(0));}
             else {book.setAuthor("Author Unknown");}
-        if(volumeInfo.has("description")) {book.setResume(volumeInfo.getString("description"));}
-            else {book.setResume("No summary available.");}
-        if(volumeInfo.has("pageCount")) {book.setPageCount(Integer.parseInt(volumeInfo.getString("pageCount")));}
-            else {book.setPageCount(0);}
-        book.setTitle(volumeInfo.getString("title"));
-        book.setPublishDate(volumeInfo.getString("publishedDate"));
+        book.setResume(getIfExists(volumeInfo, "description", "No summary available."));
+        book.setTitle(getIfExists(volumeInfo, "title", "No Title available."));
+        book.setPageCount(Integer.parseInt(getIfExists(volumeInfo, "pagecount", "0")));
+        book.setPublishDate(getIfExists(volumeInfo, "publishedDate", "Date unknown"));
         return book;
+    }
+
+    private String getIfExists(JSONObject jsonObject, String key, String fallback) throws JSONException {
+        if(jsonObject.has(key)) {
+            return jsonObject.getString(key);
+        }
+        return fallback;
     }
 
     /**

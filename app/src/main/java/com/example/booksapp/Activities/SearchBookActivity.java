@@ -6,12 +6,14 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Pair;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -97,11 +99,9 @@ public class SearchBookActivity extends AppCompatActivity {
             final ImageView imageView = (ImageView) convertView.findViewById(R.id.bitmap_small_cover);
             if(urlCover!=null)
             {
-                Response.Listener<Bitmap> rep_listener = response -> {
-                    imageView.setImageBitmap(response);
-                };
+                Response.Listener<Bitmap> rep_listener = imageView::setImageBitmap;
                 //Constructs the image request and adds it to the queue
-                ImageRequest imageRequest = new ImageRequest(urlCover, rep_listener, 1000, 1000, ImageView.ScaleType.CENTER, Bitmap.Config.ARGB_8888, null);
+                ImageRequest imageRequest = new ImageRequest(urlCover, rep_listener, 1000, 1000, ImageView.ScaleType.CENTER, Bitmap.Config.RGB_565, null);
                 queue.add(imageRequest);
             } else {
                 imageView.setImageResource(R.drawable.default_cover);
@@ -112,6 +112,8 @@ public class SearchBookActivity extends AppCompatActivity {
 
             titleView.setText(bookInfo.getTitle());
             authorView.setText(bookInfo.getAuthor());
+
+            imageView.setLayoutParams(new LinearLayout.LayoutParams( LinearLayout.LayoutParams.WRAP_CONTENT, (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 90, getResources().getDisplayMetrics()) ));
             return convertView;
         }
     }
