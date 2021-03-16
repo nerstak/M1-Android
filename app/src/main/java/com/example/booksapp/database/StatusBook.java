@@ -6,7 +6,8 @@ public enum StatusBook {
     OnHold("On hold"),
     PlanToRead("Plan to read"),
     Dropped("Dropped"),
-    ReReading("Re-reading");
+    ReReading("Re-reading"),
+    Done("Done");
 
     private final String name;
 

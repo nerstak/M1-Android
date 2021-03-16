@@ -7,5 +7,6 @@
         <item>Plan to read</item>
         <item>Dropped</item>
         <item>Re-reading</item>
+        <item>Done</item>
     </string-array>
 </resources>
