@@ -26,6 +26,8 @@ import com.example.booksapp.database.BookEntity;
 import com.example.booksapp.database.DatabaseUtilities;
 import com.example.booksapp.database.StatusBook;
 
+import java.util.stream.IntStream;
+
 /**
  * Activity to display information on book
  */
@@ -150,6 +152,7 @@ public class ActivityBook extends AppCompatActivity {
      * Set spinner values and default position
      */
     private void setRatingSpinner() {
+
         Spinner spinner = findViewById(R.id.spinner_rating);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.rating_array, android.R.layout.simple_spinner_item);
@@ -157,12 +160,16 @@ public class ActivityBook extends AppCompatActivity {
         spinner.setPrompt("Rating?");
         spinner.setAdapter(adapter);
 
-        spinner.setSelection(bookEntity.getRating());
+        String[] ratings = getResources().getStringArray(R.array.rating_array);
+        spinner.setSelection(
+            IntStream.range(0, ratings.length).filter(i -> ratings[i].equals(bookEntity.getRating())).findFirst().orElse(0)
+        );
+
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                bookEntity.setRating(position);
+                bookEntity.setRating(ratings[position]);
                 updateBook();
             }
 
