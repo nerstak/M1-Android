@@ -37,10 +37,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // TODO: Remove this once we can add book through app
-        AsyncAddSingleBook a = new AsyncAddSingleBook(new WeakReference<>(getApplicationContext()), "1-69DwAAQBAJ", true, getResources().getString(R.string.CONSUMER_KEY));
-        a.execute();
-
         myGridAdapter = new MyGridAdapter(this);
         GridView gridView = findViewById(R.id.grid_view);
         gridView.setAdapter(myGridAdapter);
@@ -90,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
             ImageView imageView = convertView.findViewById(R.id.bitmap_image_view);
             TextView textView = convertView.findViewById(R.id.basic_book_info);
 
-            loadCover(bookEntity, imageView);
+            loadCover(bookEntity.getId(), imageView);
 
             textView.setText(
                     context.getResources().getString(
@@ -130,19 +126,18 @@ public class MainActivity extends AppCompatActivity {
 
         /**
          * Load correct cover
-         * @param bookEntity Book to load cover
+         * @param bookId Book to load cover
          * @param imageView ImageView for cover
          */
-        private void loadCover(BookEntity bookEntity, ImageView imageView) {
-            File file = new File(context.getCacheDir(), bookEntity.getId());
+        public void loadCover(String bookId, ImageView imageView) {
+            File file = new File(context.getCacheDir(), bookId);
             if(file.exists()) {
                 Bitmap b = BitmapFactory.decodeFile(file.getAbsolutePath());
                 imageView.setImageBitmap(Bitmap.createScaledBitmap(b, b.getWidth() * 3, b.getHeight() * 3, true));
             } else if(isNetworkAvailable()){
                 // We download the cover if it was missing
-                AsyncBitmapDownloader downloader = new AsyncBitmapDownloader(new WeakReference<>(context), bookEntity.getId());
+                AsyncBitmapDownloader downloader = new AsyncBitmapDownloader(new WeakReference<>(context), bookId);
                 downloader.execute();
-                notifyDataSetChanged();
             }
         }
     }

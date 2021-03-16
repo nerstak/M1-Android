@@ -11,22 +11,28 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.ImageRequest;
+import com.example.booksapp.AsyncTasks.AsyncBitmapDownloader;
 import com.example.booksapp.AsyncTasks.AsyncFindBooks;
 import com.example.booksapp.R;
 import com.example.booksapp.Singletons.MySingleton;
+import com.example.booksapp.database.BookDatabase;
 import com.example.booksapp.database.BookEntity;
+import com.example.booksapp.database.DatabaseUtilities;
 
+import java.lang.ref.WeakReference;
 import java.util.Vector;
 
 public class SearchBookActivity extends AppCompatActivity {
@@ -52,6 +58,29 @@ public class SearchBookActivity extends AppCompatActivity {
         findBooks.execute(bookQuery);
         ListView listView = (ListView) findViewById(R.id.found_list);
         listView.setAdapter(myListAdapter);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                BookEntity clicked = (BookEntity) myListAdapter.getItem(position);
+
+                BookDatabase db = DatabaseUtilities.getBookDatabase(getApplicationContext());
+
+                String message;
+                if (db.bookDAO().findByID(clicked.getId()) != null) {
+                    db.bookDAO().update(clicked);
+                    message = "Book is already in Library";
+                } else {
+                    db.bookDAO().insertAll(clicked);
+                    message = "Book added to Library!";
+                    // We download the cover
+                    AsyncBitmapDownloader downloader = new AsyncBitmapDownloader(new WeakReference<>(getApplicationContext()), clicked.getId());
+                    downloader.execute();
+                }
+                Toast toast = Toast.makeText(getApplicationContext(),message,Toast.LENGTH_SHORT);
+                toast.show();
+            }
+        });
     }
 
     public class MyListAdapter extends BaseAdapter{
@@ -70,7 +99,7 @@ public class SearchBookActivity extends AppCompatActivity {
 
         @Override
         public Object getItem(int position) {
-            return vector.get(position);
+            return vector.get(position).first;
         }
 
         @Override
@@ -114,6 +143,7 @@ public class SearchBookActivity extends AppCompatActivity {
             authorView.setText(bookInfo.getAuthor());
 
             imageView.setLayoutParams(new LinearLayout.LayoutParams( LinearLayout.LayoutParams.WRAP_CONTENT, (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 90, getResources().getDisplayMetrics()) ));
+
             return convertView;
         }
     }
