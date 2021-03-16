@@ -13,4 +13,7 @@
     <string name="search_hint">Book Title - eg. Harry Potter</string>
     <string name="search_desc">Search: </string>
     <string name="search_header">Google Books Results</string>
+    <string name="rating">Rating:</string>
+    <string name="pages_read">Pages read</string>
+    <string name="status">Status:</string>
 </resources>
