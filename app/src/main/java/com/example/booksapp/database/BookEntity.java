@@ -34,7 +34,10 @@ public class BookEntity {
     @ColumnInfo(name = "publish_date")
     private String publishDate;
 
-    public BookEntity(@NonNull String id, String title, String author, int pageCount, int pageRead, String status, String resume, String publishDate) {
+    @ColumnInfo(name = "rating")
+    private int rating;
+
+    public BookEntity(@NonNull String id, String title, String author, int pageCount, int pageRead, String status, String resume, String publishDate, int rating) {
         this.id = id;
         this.title = title;
         this.author = author;
@@ -43,6 +46,7 @@ public class BookEntity {
         this.status = status;
         this.resume = resume;
         this.publishDate = publishDate;
+        this.rating = rating;
     }
 
     @Ignore
@@ -50,6 +54,7 @@ public class BookEntity {
         this.id = id;
         this.pageRead = 0;
         this.status = StatusBook.Unknown.toString();
+        this.rating = 0;
     }
 
     @NonNull
@@ -121,5 +126,13 @@ public class BookEntity {
 
     public void setPublishDate(String publishDate) {
         this.publishDate = publishDate;
+    }
+
+    public int getRating() {
+        return rating;
+    }
+
+    public void setRating(int rating) {
+        this.rating = rating;
     }
 }

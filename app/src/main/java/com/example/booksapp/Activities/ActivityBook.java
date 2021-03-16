@@ -5,7 +5,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,7 +17,6 @@ import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
 import com.example.booksapp.Fragments.BookInfo;
 import com.example.booksapp.Fragments.BookResume;
@@ -54,7 +52,8 @@ public class ActivityBook extends AppCompatActivity {
         getSupportActionBar().setTitle(String.valueOf(bookEntity.getTitle()));
 
         setPageCount();
-        setSpinner();
+        setStatusSpinner();
+        setRatingSpinner();
         setButtons();
         setPageViewEdit();
         setFragmentListener();
@@ -125,11 +124,12 @@ public class ActivityBook extends AppCompatActivity {
     /**
      * Set spinner values and default position
      */
-    private void setSpinner() {
+    private void setStatusSpinner() {
         Spinner spinner = findViewById(R.id.spinner_status);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.status_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setPrompt("Status?");
         spinner.setAdapter(adapter);
 
         spinner.setSelection(StatusBook.toStatus(bookEntity.getStatus()).ordinal());
@@ -138,6 +138,31 @@ public class ActivityBook extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 bookEntity.setStatus(StatusBook.values()[position].toString());
+                updateBook();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
+        });
+    }
+
+    /**
+     * Set spinner values and default position
+     */
+    private void setRatingSpinner() {
+        Spinner spinner = findViewById(R.id.spinner_rating);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.rating_array, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setPrompt("Rating?");
+        spinner.setAdapter(adapter);
+
+        spinner.setSelection(bookEntity.getRating());
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                bookEntity.setRating(position);
                 updateBook();
             }
 

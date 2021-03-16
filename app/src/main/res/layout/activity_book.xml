@@ -21,10 +21,11 @@
         android:orientation="horizontal"
         android:gravity="center" >
 
-        <Spinner
-            android:id="@+id/spinner_status"
+        <TextView
+            android:gravity="center"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:text="@string/pages_read" />
 
         <ImageButton
             android:id="@+id/book_minus_page"
@@ -49,5 +50,47 @@
             android:contentDescription="@string/plus" />
 
     </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/status"
+            android:gravity="center"
+            />
+
+        <Spinner
+            android:id="@+id/spinner_status"
+            style="@android:style/Widget.Spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <TextView
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/rating" />
+
+        <Spinner
+            android:id="@+id/spinner_rating"
+            style="@android:style/Widget.Spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+
+    </LinearLayout>
+
+
 
 </LinearLayout>
