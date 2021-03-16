@@ -35,9 +35,9 @@ public class BookEntity {
     private String publishDate;
 
     @ColumnInfo(name = "rating")
-    private int rating;
+    private String rating;
 
-    public BookEntity(@NonNull String id, String title, String author, int pageCount, int pageRead, String status, String resume, String publishDate, int rating) {
+    public BookEntity(@NonNull String id, String title, String author, int pageCount, int pageRead, String status, String resume, String publishDate, String rating) {
         this.id = id;
         this.title = title;
         this.author = author;
@@ -54,7 +54,7 @@ public class BookEntity {
         this.id = id;
         this.pageRead = 0;
         this.status = StatusBook.Unknown.toString();
-        this.rating = 0;
+        this.rating = "Unrated";
     }
 
     @NonNull
@@ -128,11 +128,11 @@ public class BookEntity {
         this.publishDate = publishDate;
     }
 
-    public int getRating() {
+    public String getRating() {
         return rating;
     }
 
-    public void setRating(int rating) {
+    public void setRating(String rating) {
         this.rating = rating;
     }
 }
