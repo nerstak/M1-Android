@@ -43,6 +43,7 @@ public class SearchBookActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_book);
 
+        // Add back arrow
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(R.string.search_header);
 
@@ -53,12 +54,14 @@ public class SearchBookActivity extends AppCompatActivity {
             bookQuery = searchIntent.getStringExtra(SearchManager.QUERY);
         }
 
+        // Set up list adapter
         myListAdapter = new MyListAdapter(this);
         AsyncFindBooks findBooks = new AsyncFindBooks(getResources().getString(R.string.CONSUMER_KEY), myListAdapter);
         findBooks.execute(bookQuery);
         ListView listView = (ListView) findViewById(R.id.found_list);
         listView.setAdapter(myListAdapter);
 
+        //Add book when tapped
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
@@ -66,6 +69,7 @@ public class SearchBookActivity extends AppCompatActivity {
 
                 BookDatabase db = DatabaseUtilities.getBookDatabase(getApplicationContext());
 
+                //Update if in library, otherwise add
                 String message;
                 if (db.bookDAO().findByID(clicked.getId()) != null) {
                     db.bookDAO().update(clicked);
@@ -142,6 +146,7 @@ public class SearchBookActivity extends AppCompatActivity {
             titleView.setText(bookInfo.getTitle());
             authorView.setText(bookInfo.getAuthor());
 
+            // Programatically rescale image since Volley does not let you do this in XML
             imageView.setLayoutParams(new LinearLayout.LayoutParams( LinearLayout.LayoutParams.WRAP_CONTENT, (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 90, getResources().getDisplayMetrics()) ));
 
             return convertView;

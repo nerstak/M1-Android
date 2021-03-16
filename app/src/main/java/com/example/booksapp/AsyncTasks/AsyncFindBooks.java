@@ -36,10 +36,11 @@ public class AsyncFindBooks extends AsyncTask<String, Void, JSONObject> {
 
     @Override
     protected JSONObject doInBackground(String... strings) {
-        URL url = null;
+        URL url;
+        // Search terms in api are separated by +
         String query = strings[0].replace(' ', '+');
         try {
-            url = new URL(urlBasis + "?q=" + query + "&printType=books&maxResults=40&key=" + apiKey);
+            url = new URL(urlBasis + "?q=" + query + "&printType=books" + "&maxResults=40" + "&key=" + apiKey);
 
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
 
@@ -73,17 +74,19 @@ public class AsyncFindBooks extends AsyncTask<String, Void, JSONObject> {
                     BookEntity newBook = createBook(currBook);
                     Log.i("teo", currBook.toString());
 
-                    String bookUrl=null;
+                    // Add thumbnail
+                    String coverUrl=null;
                     if(currBook.getJSONObject("volumeInfo").has("imageLinks"))
                     {
-                        bookUrl = currBook.getJSONObject("volumeInfo")
+                        coverUrl = currBook.getJSONObject("volumeInfo")
                                 .getJSONObject("imageLinks").getString("thumbnail");
-                        Log.i("teo", bookUrl);
+                        Log.i("teo", coverUrl);
                     }
 
-                    myListAdapter.add(newBook, bookUrl);
+                    myListAdapter.add(newBook, coverUrl);
                 }
 
+                // Notify list adapter that all book objects have been created
                 myListAdapter.notifyDataSetChanged();
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -110,6 +113,14 @@ public class AsyncFindBooks extends AsyncTask<String, Void, JSONObject> {
         return book;
     }
 
+    /**
+     * Get a book's parameter if its JSON info exists
+     * @param jsonObject book's Json info
+     * @param key Parameter we are looking for
+     * @param fallback Value to save instead if parameter does not exist
+     * @return Parameter string/Default String
+     * @throws JSONException Parsing error
+     */
     private String getIfExists(JSONObject jsonObject, String key, String fallback) throws JSONException {
         if(jsonObject.has(key)) {
             return jsonObject.getString(key);
@@ -119,7 +130,6 @@ public class AsyncFindBooks extends AsyncTask<String, Void, JSONObject> {
 
     /**
      * Actions on result
-     *
      * @param bufferedInputStream Input stream
      * @return JSON Object retrieved
      */
@@ -137,7 +147,6 @@ public class AsyncFindBooks extends AsyncTask<String, Void, JSONObject> {
 
     /**
      * Read stream and convert it to string
-     *
      * @param is Stream
      * @return String
      */

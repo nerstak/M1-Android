@@ -17,7 +17,6 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.booksapp.AsyncTasks.AsyncAddSingleBook;
 import com.example.booksapp.AsyncTasks.AsyncBitmapDownloader;
 import com.example.booksapp.AsyncTasks.AsyncReadingMyBooks;
 import com.example.booksapp.R;
