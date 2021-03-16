@@ -51,6 +51,7 @@ public class ActivityBook extends AppCompatActivity {
         bookEntity = db.bookDAO().findByID(bookID);
         db.close();
 
+        getSupportActionBar().setTitle(String.valueOf(bookEntity.getTitle()));
 
         setPageCount();
         setSpinner();
