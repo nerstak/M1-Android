@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.provider.SearchRecentSuggestions;
 import android.util.Pair;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -26,6 +27,7 @@ import com.android.volley.Response;
 import com.android.volley.toolbox.ImageRequest;
 import com.example.booksapp.AsyncTasks.AsyncBitmapDownloader;
 import com.example.booksapp.AsyncTasks.AsyncFindBooks;
+import com.example.booksapp.ContentProviders.MySuggestionProvider;
 import com.example.booksapp.R;
 import com.example.booksapp.Singletons.MySingleton;
 import com.example.booksapp.database.BookDatabase;
@@ -52,6 +54,11 @@ public class SearchBookActivity extends AppCompatActivity {
         Intent searchIntent = getIntent();
         if (searchIntent.getAction().equals(Intent.ACTION_SEARCH)) {
             bookQuery = searchIntent.getStringExtra(SearchManager.QUERY);
+
+            //Adds query to search history
+            SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this,
+                    MySuggestionProvider.AUTHORITY, MySuggestionProvider.MODE);
+            suggestions.saveRecentQuery(bookQuery, null);
         }
 
         // Set up list adapter

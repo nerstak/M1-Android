@@ -108,7 +108,7 @@ public class AsyncFindBooks extends AsyncTask<String, Void, JSONObject> {
             else {book.setAuthor("Author Unknown");}
         book.setResume(getIfExists(volumeInfo, "description", "No summary available."));
         book.setTitle(getIfExists(volumeInfo, "title", "No Title available."));
-        book.setPageCount(Integer.parseInt(getIfExists(volumeInfo, "pagecount", "0")));
+        book.setPageCount(Integer.parseInt(getIfExists(volumeInfo, "pageCount", "0")));
         book.setPublishDate(getIfExists(volumeInfo, "publishedDate", "Date unknown"));
         return book;
     }
