@@ -1,12 +1,16 @@
 package com.example.booksapp.database;
 
+import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
+
+import java.io.File;
 
 @Entity
 public class BookEntity {
@@ -134,5 +138,22 @@ public class BookEntity {
 
     public void setRating(String rating) {
         this.rating = rating;
+    }
+
+    /**
+     * Load image of book
+     * @param context Context
+     * @return Bitmap or null if file is missing
+     */
+    public Bitmap loadImage(Context context) {
+        // TODO: Load custom image first, if not load cache
+        File file = new File(context.getCacheDir(), id);
+        if (file.exists()) {
+            Bitmap b = BitmapFactory.decodeFile(file.getAbsolutePath());
+
+            // Upscaling image
+            return Bitmap.createScaledBitmap(b, 400, 600, true);
+        }
+        return null;
     }
 }

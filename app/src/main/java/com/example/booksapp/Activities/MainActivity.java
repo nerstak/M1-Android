@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
             ImageView imageView = convertView.findViewById(R.id.bitmap_image_view);
             TextView textView = convertView.findViewById(R.id.basic_book_info);
 
-            loadCover(bookEntity.getId(), imageView);
+            loadCover(bookEntity, imageView);
 
             textView.setText(
                     context.getResources().getString(
@@ -125,17 +125,16 @@ public class MainActivity extends AppCompatActivity {
 
         /**
          * Load correct cover
-         * @param bookId Book to load cover
+         * @param book Book to load cover
          * @param imageView ImageView for cover
          */
-        public void loadCover(String bookId, ImageView imageView) {
-            File file = new File(context.getCacheDir(), bookId);
-            if(file.exists()) {
-                Bitmap b = BitmapFactory.decodeFile(file.getAbsolutePath());
-                imageView.setImageBitmap(Bitmap.createScaledBitmap(b, b.getWidth() * 3, b.getHeight() * 3, true));
+        public void loadCover(BookEntity book, ImageView imageView) {
+            Bitmap bitmap = book.loadImage(getApplicationContext());
+            if(bitmap != null) {
+                imageView.setImageBitmap(bitmap);
             } else if(isNetworkAvailable()){
                 // We download the cover if it was missing
-                AsyncBitmapDownloader downloader = new AsyncBitmapDownloader(new WeakReference<>(context), bookId);
+                AsyncBitmapDownloader downloader = new AsyncBitmapDownloader(new WeakReference<>(context), book.getId());
                 downloader.execute();
             }
         }

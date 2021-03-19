@@ -59,6 +59,9 @@ public class BookInfo extends Fragment {
         setCover();
     }
 
+    /**
+     * Set date
+     */
     private void setDate() {
         TextView date = activity.findViewById(R.id.date_book);
         date.setText(activity.getResources().getString(R.string.date_format,activity.bookEntity.getPublishDate()));
@@ -70,13 +73,9 @@ public class BookInfo extends Fragment {
     private void setCover() {
         ImageView cover = activity.findViewById(R.id.cover_book_info);
 
-        File file = new File(activity.getCacheDir(), activity.bookEntity.getId());
-        if (file.exists()) {
-            Bitmap b = BitmapFactory.decodeFile(file.getAbsolutePath());
-
-            // Upscaling image
-            cover.setImageBitmap(
-                    Bitmap.createScaledBitmap(b, b.getWidth() * 3, b.getHeight() * 3, true));
+        Bitmap bitmap = activity.bookEntity.loadImage(activity);
+        if(bitmap != null) {
+            cover.setImageBitmap(bitmap);
         }
     }
 
