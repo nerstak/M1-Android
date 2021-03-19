@@ -4,7 +4,7 @@
     <string name="find_a_book">Find a book</string>
     <string name="cover">Cover</string>
     <string name="add_book">Add book</string>
-    <string name="basic_book_info">%1$s - %2$s</string>
+    <string name="basic_book_info">&lt;b>%1$s&lt;/b> - &lt;i>%2$s&lt;/i></string>
     <string name="pages_numbering">%1d pages</string>
     <string name="plus">+</string>
     <string name="minus">-</string>

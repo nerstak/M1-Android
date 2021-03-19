@@ -1,13 +1,10 @@
 package com.example.booksapp.AsyncTasks;
 
-import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import com.example.booksapp.Activities.SearchBookActivity;
-import com.example.booksapp.database.BookDatabase;
 import com.example.booksapp.database.BookEntity;
-import com.example.booksapp.database.DatabaseUtilities;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -18,7 +15,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 /**

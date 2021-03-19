@@ -2,7 +2,6 @@ package com.example.booksapp.Fragments;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -17,8 +16,6 @@ import android.widget.TextView;
 
 import com.example.booksapp.Activities.ActivityBook;
 import com.example.booksapp.R;
-
-import java.io.File;
 
 /**
  *  Fragment holding most information on book
