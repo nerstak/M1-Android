@@ -26,6 +26,7 @@ import com.example.booksapp.database.BookEntity;
 import com.example.booksapp.database.DatabaseUtilities;
 import com.example.booksapp.database.StatusBook;
 
+import java.util.Objects;
 import java.util.stream.IntStream;
 
 /**
@@ -40,7 +41,7 @@ public class ActivityBook extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
         setFragment(BookInfo.newInstance());
 

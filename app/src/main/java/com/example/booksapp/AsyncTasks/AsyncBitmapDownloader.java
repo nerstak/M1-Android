@@ -8,10 +8,12 @@ import android.util.Log;
 import android.widget.ImageView;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -33,7 +35,7 @@ public class AsyncBitmapDownloader extends AsyncTask<String, Void, Bitmap> {
 
     @Override
     protected Bitmap doInBackground(String... strings) {
-        URL url = null;
+        URL url;
         try {
             url = new URL(urlBasis + idBook + urlParam);
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
@@ -42,6 +44,9 @@ public class AsyncBitmapDownloader extends AsyncTask<String, Void, Bitmap> {
             try {
                 InputStream in = new BufferedInputStream(urlConnection.getInputStream());
                 bm = BitmapFactory.decodeStream(in);
+
+
+                saveImage(bm);
             } catch (Exception e) {
                 Log.i("karsto", e.toString());
             } finally {
@@ -58,8 +63,11 @@ public class AsyncBitmapDownloader extends AsyncTask<String, Void, Bitmap> {
         return null;
     }
 
-    @Override
-    protected void onPostExecute(Bitmap bitmap) {
+    /**
+     * Save bitmap to file
+     * @param bitmap Bitmap to save
+     */
+    private void saveImage(Bitmap bitmap) {
         if(contextViewWeakReference != null && bitmap != null) {
             Context context = contextViewWeakReference.get();
 

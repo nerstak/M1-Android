@@ -19,7 +19,7 @@ public class AsyncReadingMyBooks extends AsyncTask<Void, Void, List<BookEntity>>
 
     public AsyncReadingMyBooks(MainActivity.MyGridAdapter myGridAdapter, Context context) {
         this.myGridAdapter = myGridAdapter;
-        this.contextWeakReference = new WeakReference<Context>(context);
+        this.contextWeakReference = new WeakReference<>(context);
     }
 
     @Override

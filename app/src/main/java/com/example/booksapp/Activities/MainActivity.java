@@ -23,7 +23,6 @@ import com.example.booksapp.R;
 import com.example.booksapp.database.BookEntity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.Vector;
@@ -40,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
         GridView gridView = findViewById(R.id.grid_view);
         gridView.setAdapter(myGridAdapter);
 
-        FloatingActionButton newBook = (FloatingActionButton) findViewById(R.id.add_button);
+        FloatingActionButton newBook = findViewById(R.id.add_button);
         newBook.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -53,8 +52,8 @@ public class MainActivity extends AppCompatActivity {
      * Adapter for GridView
      */
     public class MyGridAdapter extends BaseAdapter {
-        Context context;
-        Vector<BookEntity> vector = new Vector<>();
+        final Context context;
+        final Vector<BookEntity> vector = new Vector<>();
 
         public MyGridAdapter(Context context) {
             this.context = context;
@@ -104,14 +103,6 @@ public class MainActivity extends AppCompatActivity {
             );
 
             return convertView;
-        }
-
-        /**
-         * Add all elements to inner vector
-         * @param list Elements
-         */
-        public void addAll(List<BookEntity> list) {
-            vector.addAll(list);
         }
 
         /**

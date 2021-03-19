@@ -27,7 +27,7 @@ import java.net.URL;
 public class AsyncFindBooks extends AsyncTask<String, Void, JSONObject> {
     private final static String urlBasis = "https://www.googleapis.com/books/v1/volumes";
     private final String apiKey;
-    private SearchBookActivity.MyListAdapter myListAdapter;
+    private final SearchBookActivity.MyListAdapter myListAdapter;
 
     public AsyncFindBooks(String apiKey, SearchBookActivity.MyListAdapter myListAdapter) {
         this.apiKey = apiKey;
@@ -50,8 +50,6 @@ public class AsyncFindBooks extends AsyncTask<String, Void, JSONObject> {
             } finally {
                 urlConnection.disconnect();
             }
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }

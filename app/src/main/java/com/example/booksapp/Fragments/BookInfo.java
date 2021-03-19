@@ -31,8 +31,7 @@ public class BookInfo extends Fragment {
 
 
     public static BookInfo newInstance() {
-        BookInfo fragment = new BookInfo();
-        return fragment;
+        return new BookInfo();
     }
 
     @Override

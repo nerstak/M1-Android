@@ -29,8 +29,7 @@ public class BookResume extends Fragment {
 
 
     public static BookResume newInstance() {
-        BookResume fragment = new BookResume();
-        return fragment;
+        return new BookResume();
     }
 
     @Override

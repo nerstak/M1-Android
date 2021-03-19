@@ -35,6 +35,7 @@ import com.example.booksapp.database.BookEntity;
 import com.example.booksapp.database.DatabaseUtilities;
 
 import java.lang.ref.WeakReference;
+import java.util.Objects;
 import java.util.Vector;
 
 public class SearchBookActivity extends AppCompatActivity {
@@ -46,7 +47,7 @@ public class SearchBookActivity extends AppCompatActivity {
         setContentView(R.layout.activity_search_book);
 
         // Add back arrow
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(R.string.search_header);
 
         String bookQuery = null;
@@ -65,7 +66,7 @@ public class SearchBookActivity extends AppCompatActivity {
         myListAdapter = new MyListAdapter(this);
         AsyncFindBooks findBooks = new AsyncFindBooks(getResources().getString(R.string.CONSUMER_KEY), myListAdapter);
         findBooks.execute(bookQuery);
-        ListView listView = (ListView) findViewById(R.id.found_list);
+        ListView listView = findViewById(R.id.found_list);
         listView.setAdapter(myListAdapter);
 
         //Add book when tapped
@@ -96,7 +97,7 @@ public class SearchBookActivity extends AppCompatActivity {
 
     public class MyListAdapter extends BaseAdapter{
         private final Context context;
-        private Vector<Pair<BookEntity,String>> vector;
+        private final Vector<Pair<BookEntity,String>> vector;
 
         public MyListAdapter(Context context) {
             this.context = context;
@@ -136,7 +137,7 @@ public class SearchBookActivity extends AppCompatActivity {
             }
 
             //puts the imageview in the response listener
-            final ImageView imageView = (ImageView) convertView.findViewById(R.id.bitmap_small_cover);
+            final ImageView imageView = convertView.findViewById(R.id.bitmap_small_cover);
             if(urlCover!=null)
             {
                 Response.Listener<Bitmap> rep_listener = imageView::setImageBitmap;
@@ -147,8 +148,8 @@ public class SearchBookActivity extends AppCompatActivity {
                 imageView.setImageResource(R.drawable.default_cover);
             }
 
-            TextView titleView = (TextView) convertView.findViewById(R.id.book_title);
-            TextView authorView = (TextView) convertView.findViewById(R.id.book_author);
+            TextView titleView = convertView.findViewById(R.id.book_title);
+            TextView authorView = convertView.findViewById(R.id.book_author);
 
             titleView.setText(bookInfo.getTitle());
             authorView.setText(bookInfo.getAuthor());

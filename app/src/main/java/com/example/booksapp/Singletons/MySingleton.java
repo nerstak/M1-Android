@@ -12,7 +12,7 @@ import com.android.volley.toolbox.Volley;
 public class MySingleton {
     private static MySingleton instance;
     private RequestQueue requestQueue;
-    private ImageLoader imageLoader;
+    private final ImageLoader imageLoader;
     private static Context ctx;
 
     private MySingleton(Context context) {
@@ -22,7 +22,7 @@ public class MySingleton {
         imageLoader = new ImageLoader(requestQueue,
                 new ImageLoader.ImageCache() {
                     private final LruCache<String, Bitmap>
-                            cache = new LruCache<String, Bitmap>(20);
+                            cache = new LruCache<>(20);
 
                     @Override
                     public Bitmap getBitmap(String url) {
