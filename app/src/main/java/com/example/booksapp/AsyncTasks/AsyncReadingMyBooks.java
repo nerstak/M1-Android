@@ -3,8 +3,6 @@ package com.example.booksapp.AsyncTasks;
 import android.content.Context;
 import android.os.AsyncTask;
 
-import androidx.room.Room;
-
 import com.example.booksapp.Activities.MainActivity;
 import com.example.booksapp.database.BookDatabase;
 import com.example.booksapp.database.BookEntity;
@@ -19,7 +17,7 @@ public class AsyncReadingMyBooks extends AsyncTask<Void, Void, List<BookEntity>>
 
     public AsyncReadingMyBooks(MainActivity.MyGridAdapter myGridAdapter, Context context) {
         this.myGridAdapter = myGridAdapter;
-        this.contextWeakReference = new WeakReference<Context>(context);
+        this.contextWeakReference = new WeakReference<>(context);
     }
 
     @Override

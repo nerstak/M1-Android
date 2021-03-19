@@ -1,11 +1,8 @@
 package com.example.booksapp.Activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -17,16 +14,20 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.text.HtmlCompat;
+
 import com.example.booksapp.AsyncTasks.AsyncBitmapDownloader;
 import com.example.booksapp.AsyncTasks.AsyncReadingMyBooks;
 import com.example.booksapp.R;
 import com.example.booksapp.database.BookEntity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.Vector;
+
+import static androidx.core.text.HtmlCompat.FROM_HTML_MODE_COMPACT;
 
 public class MainActivity extends AppCompatActivity {
     private MyGridAdapter myGridAdapter;
@@ -40,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
         GridView gridView = findViewById(R.id.grid_view);
         gridView.setAdapter(myGridAdapter);
 
-        FloatingActionButton newBook = (FloatingActionButton) findViewById(R.id.add_button);
+        FloatingActionButton newBook = findViewById(R.id.add_button);
         newBook.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -53,8 +54,8 @@ public class MainActivity extends AppCompatActivity {
      * Adapter for GridView
      */
     public class MyGridAdapter extends BaseAdapter {
-        Context context;
-        Vector<BookEntity> vector = new Vector<>();
+        final Context context;
+        final Vector<BookEntity> vector = new Vector<>();
 
         public MyGridAdapter(Context context) {
             this.context = context;
@@ -77,20 +78,20 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            if(convertView == null) {
+            if (convertView == null) {
                 convertView = LayoutInflater.from(context).inflate(R.layout.item_personal_book_layout, parent, false);
             }
 
+            // Init of variables
             BookEntity bookEntity = (BookEntity) (getItem(position));
             ImageView imageView = convertView.findViewById(R.id.bitmap_image_view);
             TextView textView = convertView.findViewById(R.id.basic_book_info);
 
-            loadCover(bookEntity.getId(), imageView);
+            // Loading and displaying data
+            loadCover(bookEntity, imageView);
+            loadInfo(bookEntity, textView);
 
-            textView.setText(
-                    context.getResources().getString(
-                            R.string.basic_book_info, bookEntity.getTitle(),bookEntity.getAuthor()));
-
+            // Action
             convertView.setClickable(true);
             convertView.setOnClickListener(
                     new View.OnClickListener() {
@@ -107,15 +108,8 @@ public class MainActivity extends AppCompatActivity {
         }
 
         /**
-         * Add all elements to inner vector
-         * @param list Elements
-         */
-        public void addAll(List<BookEntity> list) {
-            vector.addAll(list);
-        }
-
-        /**
          * Set elements as new inner vectors
+         *
          * @param list Elements
          */
         public void setVector(List<BookEntity> list) {
@@ -125,24 +119,37 @@ public class MainActivity extends AppCompatActivity {
 
         /**
          * Load correct cover
-         * @param bookId Book to load cover
+         *
+         * @param book      Book to load cover
          * @param imageView ImageView for cover
          */
-        public void loadCover(String bookId, ImageView imageView) {
-            File file = new File(context.getCacheDir(), bookId);
-            if(file.exists()) {
-                Bitmap b = BitmapFactory.decodeFile(file.getAbsolutePath());
-                imageView.setImageBitmap(Bitmap.createScaledBitmap(b, b.getWidth() * 3, b.getHeight() * 3, true));
-            } else if(isNetworkAvailable()){
+        private void loadCover(BookEntity book, ImageView imageView) {
+            Bitmap bitmap = book.loadImage(getApplicationContext());
+            if (bitmap != null) {
+                imageView.setImageBitmap(bitmap);
+            } else if (isNetworkAvailable()) {
                 // We download the cover if it was missing
-                AsyncBitmapDownloader downloader = new AsyncBitmapDownloader(new WeakReference<>(context), bookId);
+                AsyncBitmapDownloader downloader = new AsyncBitmapDownloader(new WeakReference<>(context), book.getId());
                 downloader.execute();
             }
+        }
+
+        /**
+         * Load information (title + author)
+         *
+         * @param book     Book
+         * @param textView TextView
+         */
+        private void loadInfo(BookEntity book, TextView textView) {
+            String info = context.getResources().getString(
+                    R.string.basic_book_info, book.getTitle(), book.getAuthor());
+            textView.setText(HtmlCompat.fromHtml(info, FROM_HTML_MODE_COMPACT));
         }
     }
 
     /**
      * Check if network is available
+     *
      * @return Boolean
      */
     private boolean isNetworkAvailable() {
@@ -155,7 +162,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if(myGridAdapter != null) {
+        if (myGridAdapter != null) {
             AsyncReadingMyBooks asyncReadingMyBooks = new AsyncReadingMyBooks(myGridAdapter, getApplicationContext());
             asyncReadingMyBooks.execute();
         }

@@ -1,13 +1,10 @@
 package com.example.booksapp.AsyncTasks;
 
-import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import com.example.booksapp.Activities.SearchBookActivity;
-import com.example.booksapp.database.BookDatabase;
 import com.example.booksapp.database.BookEntity;
-import com.example.booksapp.database.DatabaseUtilities;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -18,7 +15,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
@@ -27,7 +23,7 @@ import java.net.URL;
 public class AsyncFindBooks extends AsyncTask<String, Void, JSONObject> {
     private final static String urlBasis = "https://www.googleapis.com/books/v1/volumes";
     private final String apiKey;
-    private SearchBookActivity.MyListAdapter myListAdapter;
+    private final SearchBookActivity.MyListAdapter myListAdapter;
 
     public AsyncFindBooks(String apiKey, SearchBookActivity.MyListAdapter myListAdapter) {
         this.apiKey = apiKey;
@@ -50,8 +46,6 @@ public class AsyncFindBooks extends AsyncTask<String, Void, JSONObject> {
             } finally {
                 urlConnection.disconnect();
             }
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }

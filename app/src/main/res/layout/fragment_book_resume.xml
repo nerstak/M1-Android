@@ -10,7 +10,9 @@
         android:layout_height="wrap_content"
         android:id="@+id/resume_book"
         android:maxLines="10"
-
+        android:textSize="20sp"
+        android:layout_margin="6dp"
+        android:ellipsize="end"
         />
 
 </FrameLayout>
