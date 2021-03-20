@@ -1,4 +1,4 @@
-package com.example.booksapp.Services;
+package com.example.booksapp.Notifications;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -9,13 +9,12 @@ import android.os.IBinder;
 
 import androidx.annotation.Nullable;
 
-import com.example.booksapp.BroadcastReceivers.NotificationAlarmReceiver;
 import com.example.booksapp.R;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class AlarmService extends Service {
+public class TimerService extends Service {
     private Timer timer;
 
     @Override
@@ -27,7 +26,7 @@ public class AlarmService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         createNotificationChannel();
-        scheduleNotificationAlarm();
+        scheduleNotificationTimer();
         return START_STICKY;
     }
 
@@ -42,32 +41,37 @@ public class AlarmService extends Service {
         return null;
     }
 
-    private void scheduleNotificationAlarm() {
-        Intent alarmIntent = new Intent(this, NotificationAlarmReceiver.class);
+    /**
+     * Creates a notification channel, since this is needed from API 26 onwards
+     */
+    private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = getString(R.string.channel_name);
+            String description = getString(R.string.channel_desc);
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+
+            // Create channel
+            NotificationChannel channel = new NotificationChannel("CHANNEL_ID", name, importance);
+            channel.setDescription(description);
+            // Register the channel with the system
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
+
+    /**
+     * Schedules frequency of sending the notification intent
+     */
+    private void scheduleNotificationTimer() {
+        Intent timerIntent = new Intent(this, NotificationReceiver.class);
 
         TimerTask task = new TimerTask() {
             public void run() {
-                sendBroadcast(alarmIntent);
+                sendBroadcast(timerIntent);
             }};
         //Sends a notification every 2 minute for testing purposes
         timer.schedule(task,5000,120000);
         //Use below for a notification every 3 days
         // timer.schedule(task,259200000,259200000);
-    }
-
-    private void createNotificationChannel() {
-        // Create the NotificationChannel, but only on API 26+ because
-        // the NotificationChannel class is new and not in the support library
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = getString(R.string.channel_name);
-            String description = getString(R.string.channel_description);
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel channel = new NotificationChannel("CHANNEL_ID", name, importance);
-            channel.setDescription(description);
-            // Register the channel with the system; you can't change the importance
-            // or other notification behaviors after this
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
-        }
     }
 }

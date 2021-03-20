@@ -20,7 +20,7 @@ import androidx.core.text.HtmlCompat;
 import com.example.booksapp.AsyncTasks.AsyncBitmapDownloader;
 import com.example.booksapp.AsyncTasks.AsyncReadingMyBooks;
 import com.example.booksapp.R;
-import com.example.booksapp.Services.AlarmService;
+import com.example.booksapp.Notifications.TimerService;
 import com.example.booksapp.database.BookEntity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        startService(new Intent(this, AlarmService.class));
+        startService(new Intent(this, TimerService.class));
 
         myGridAdapter = new MyGridAdapter(this);
         GridView gridView = findViewById(R.id.grid_view);

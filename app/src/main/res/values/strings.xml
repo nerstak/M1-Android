@@ -18,5 +18,5 @@
     <string name="status">Status:</string>
     <string name="cover_button">Add Cover</string>
     <string name="channel_name">Notification Channel</string>
-    <string name="channel_description">Channel for book notifications.</string>
+    <string name="channel_desc">Channel for book notifications.</string>
 </resources>

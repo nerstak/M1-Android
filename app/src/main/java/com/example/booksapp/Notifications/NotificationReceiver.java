@@ -1,6 +1,5 @@
-package com.example.booksapp.BroadcastReceivers;
+package com.example.booksapp.Notifications;
 
-import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -20,7 +19,8 @@ import com.example.booksapp.database.DatabaseUtilities;
 import java.util.List;
 import java.util.Random;
 
-public class NotificationAlarmReceiver extends BroadcastReceiver {
+
+public class NotificationReceiver extends BroadcastReceiver {
     private static final int NOTIFICATION_ID = 100;
     private Context context;
     private String bookID;
@@ -30,36 +30,44 @@ public class NotificationAlarmReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         this.context = context;
-        //Intent to invoke app when click on notification.
-        //In this sample, we want to start/launch this sample app when user clicks on notification
-        Intent intentToRepeat;
+        //Intent we broadcast when the user clicks the notification
+        Intent clickedIntent;
 
-        setMessage();
+        generateMessage();
 
+        // Go to the activity of the notification book if the notification was about a specific book
         if(bookID != null) {
-            intentToRepeat = new Intent(context, ActivityBook.class);
-            intentToRepeat.putExtra("bookID", bookID);
+            clickedIntent = new Intent(context, ActivityBook.class);
+            clickedIntent.putExtra("bookID", bookID);
         } else {
-            intentToRepeat = new Intent(context, MainActivity.class);
+            // main activity otherwise
+            clickedIntent = new Intent(context, MainActivity.class);
         }
 
         //set flag to restart/relaunch the app
-        intentToRepeat.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        clickedIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
         //Pending intent to handle launch of Activity in intent above
         PendingIntent pendingIntent =
-                PendingIntent.getActivity(context, NOTIFICATION_ID, intentToRepeat, PendingIntent.FLAG_UPDATE_CURRENT);
+                PendingIntent.getActivity(context, NOTIFICATION_ID, clickedIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         //Build notification
-        NotificationCompat.Builder builder= buildLocalNotification(context, pendingIntent);
-        Notification repeatedNotification = builder.build();
+        Notification repeatedNotification = buildNotification(context, pendingIntent);
 
+        //Puts the notification in a manager so we can lock & send it
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
+        //Finally send notification
         notificationManager.notify(NOTIFICATION_ID, repeatedNotification);
     }
 
-    private NotificationCompat.Builder buildLocalNotification(Context context, PendingIntent pendingIntent) {
+    /**
+     * Builds notification given pending intent and context
+     * @param context current context
+     * @param pendingIntent pending intent of the intent we want to broadcast with notification tap
+     * @return built notification
+     */
+    private Notification buildNotification(Context context, PendingIntent pendingIntent) {
         NotificationCompat.Builder builder =
                 (NotificationCompat.Builder) new NotificationCompat.Builder(context, "CHANNEL_ID")
                         .setContentIntent(pendingIntent)
@@ -67,15 +75,21 @@ public class NotificationAlarmReceiver extends BroadcastReceiver {
                         .setContentTitle(title)
                         .setContentText(text)
                         .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-
-        return builder;
+        return builder.build();
     }
 
-    private void setMessage() {
+    /**
+     * Gather notification title and text as well as possible book id to direct to
+     */
+    private void generateMessage() {
         BookDatabase db = DatabaseUtilities.getBookDatabase(context);
+        // Gets all books that have been finished/dropped but not rated
         List<BookEntity> unrateds = db.bookDAO().getAllUnrated();
+        // Gets all books that have been planned to read or put on hold
         List<BookEntity> unreads = db.bookDAO().getAllUnread();
 
+        // If there are no books matching the above criteria, send a generic notification not targeting
+        // a singular book
         if(unrateds.isEmpty() && unreads.isEmpty())
         {
             title = "Any good books lately?";
@@ -86,6 +100,7 @@ public class NotificationAlarmReceiver extends BroadcastReceiver {
         } else if(unreads.isEmpty()) {
             generateRatingMessage(unrateds);
         } else {
+            // If both criteria are available choose a notification type at random
             int choice = new Random().nextInt(2);
             switch (choice) {
                 case 0:
@@ -98,6 +113,10 @@ public class NotificationAlarmReceiver extends BroadcastReceiver {
         }
     }
 
+    /**
+     * Generates notification title and text & book id to direct to for a rating type notif
+     * @param books list of all unrated books
+     */
     private void generateRatingMessage(List<BookEntity> books) {
         BookEntity book = pickRandomBook(books);
 
@@ -106,6 +125,10 @@ public class NotificationAlarmReceiver extends BroadcastReceiver {
         bookID = book.getId();
     }
 
+    /**
+     * Generates notification title and text & book id to direct to for a reading type notif
+     * @param books list of all unread books
+     */
     private void generateReadingMessage(List<BookEntity> books) {
         BookEntity book = pickRandomBook(books);
 
@@ -114,6 +137,11 @@ public class NotificationAlarmReceiver extends BroadcastReceiver {
         bookID = book.getId();
     }
 
+    /**
+     * Picks a random book from a list of books
+     * @param books list of books
+     * @return chosen book
+     */
     private BookEntity pickRandomBook(List<BookEntity> books) {
         return books.get(new Random().nextInt(books.size()));
     }
