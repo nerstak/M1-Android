@@ -49,7 +49,10 @@ public class AlarmService extends Service {
             public void run() {
                 sendBroadcast(alarmIntent);
             }};
-        timer.schedule(task,1000,10000);
+        //Sends a notification every 2 minute for testing purposes
+        timer.schedule(task,5000,120000);
+        //Use below for a notification every 3 days
+        // timer.schedule(task,259200000,259200000);
     }
 
     private void createNotificationChannel() {

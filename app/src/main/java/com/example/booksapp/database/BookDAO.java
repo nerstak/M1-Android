@@ -13,6 +13,12 @@ public interface BookDAO {
     @Query("SELECT * FROM bookentity")
     List<BookEntity> getAll();
 
+    @Query("SELECT * FROM bookentity WHERE status IN ('Done','Re-reading','Dropped') AND rating = 'Unrated' ")
+    List<BookEntity> getAllUnrated();
+
+    @Query("SELECT * FROM bookentity WHERE status IN ('Plan to read','On hold')")
+    List<BookEntity> getAllUnread();
+
     @Query("SELECT * FROM bookentity WHERE title LIKE :title")
     BookEntity findByName(String title);
 
