@@ -31,8 +31,10 @@
             <meta-data android:name="android.app.default_searchable"
                 android:value="com.example.booksapp.Activities.SearchBookActivity" />
         </activity>
+        <receiver android:name=".Notifications.NotificationReceiver"/>
         <provider android:name=".ContentProviders.MySuggestionProvider"
             android:authorities="com.example.booksapp.ContentProvider.MySuggestionProvider" />
+        <service android:name=".Notifications.TimerService"/>
     </application>
 
 </manifest>
