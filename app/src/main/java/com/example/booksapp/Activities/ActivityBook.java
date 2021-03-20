@@ -5,6 +5,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -31,6 +34,10 @@ import com.example.booksapp.database.BookEntity;
 import com.example.booksapp.database.DatabaseUtilities;
 import com.example.booksapp.database.StatusBook;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Objects;
 import java.util.stream.IntStream;
 
@@ -41,6 +48,7 @@ public class ActivityBook extends AppCompatActivity {
     public BookEntity bookEntity;
     private String currentFragment = "info";
     private static final int PICK_IMAGE = 100;
+    private String bookID;
     Uri imageUri;
 
     @Override
@@ -53,7 +61,7 @@ public class ActivityBook extends AppCompatActivity {
         setFragment(BookInfo.newInstance());
 
         Bundle extras = getIntent().getExtras();
-        String bookID = extras.getString("bookID");
+        bookID = extras.getString("bookID");
 
         BookDatabase db = DatabaseUtilities.getBookDatabase(getApplicationContext());
         bookEntity = db.bookDAO().findByID(bookID);
@@ -119,9 +127,11 @@ public class ActivityBook extends AppCompatActivity {
             finish();
             return true;
         } else if(item.getItemId() == R.id.action_delete_book) {
+            //Delete book from db and custom cover from files
             BookDatabase db = DatabaseUtilities.getBookDatabase(getApplicationContext());
             db.bookDAO().delete(bookEntity);
             db.close();
+            deleteFile(bookID);
             finish();
             return true;
         }
@@ -279,9 +289,56 @@ public class ActivityBook extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         super.onActivityResult(requestCode, resultCode, data);
+        //If we are picking an image from the gallery get the image and save it to internal app storage
         if (resultCode == RESULT_OK && requestCode == PICK_IMAGE){
             imageUri = data.getData();
-            ((ImageView)findViewById(R.id.cover_book_info)).setImageURI(imageUri);
+            try {
+                File f = new File(getFilesDir(), bookID);
+                FileOutputStream fos = new FileOutputStream(f);
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
+
+                //Rotate and scale the image correctly before saving it
+                InputStream inputStream = getContentResolver().openInputStream(imageUri);
+                bitmap = rotateImage(bitmap, inputStream);
+                bitmap = Bitmap.createScaledBitmap(bitmap, 400, 600, true);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 90, fos);
+
+                ImageView imageView = findViewById(R.id.cover_book_info);
+
+                imageView.setImageBitmap(bitmap);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
+    }
+
+    /**
+     * Rotates an image based on Exif information
+     * Images uploaded from galery may be incorrectly rotated by bitmapFactory since their Exif data is ignored
+     * @param bitmap image to rotate
+     * @return rotated image
+     * @throws IOException error in file access
+     */
+    public Bitmap rotateImage(Bitmap bitmap, InputStream inputStream) throws IOException {
+        int rotate = 0;
+        ExifInterface exif;
+        exif = new ExifInterface(inputStream);
+        int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION,
+                ExifInterface.ORIENTATION_NORMAL);
+        switch (orientation) {
+            case ExifInterface.ORIENTATION_ROTATE_270:
+                rotate = 270;
+                break;
+            case ExifInterface.ORIENTATION_ROTATE_180:
+                rotate = 180;
+                break;
+            case ExifInterface.ORIENTATION_ROTATE_90:
+                rotate = 90;
+                break;
+        }
+        Matrix matrix = new Matrix();
+        matrix.postRotate(rotate);
+        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(),
+                bitmap.getHeight(), matrix, true);
     }
 }
