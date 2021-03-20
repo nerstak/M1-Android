@@ -146,8 +146,11 @@ public class BookEntity {
      * @return Bitmap or null if file is missing
      */
     public Bitmap loadImage(Context context) {
-        // TODO: Load custom image first, if not load cache
-        File file = new File(context.getCacheDir(), id);
+        // Load custom image first, if not load cache
+        File file = new File(context.getFilesDir(), id);
+        if(!file.exists()) {
+            file = new File(context.getCacheDir(), id);
+        }
         if (file.exists()) {
             Bitmap b = BitmapFactory.decodeFile(file.getAbsolutePath());
 
