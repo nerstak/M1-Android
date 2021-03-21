@@ -9,6 +9,7 @@ import android.provider.SearchRecentSuggestions;
 import android.util.Pair;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -28,6 +30,7 @@ import com.android.volley.toolbox.ImageRequest;
 import com.example.booksapp.AsyncTasks.AsyncBitmapDownloader;
 import com.example.booksapp.AsyncTasks.AsyncFindBooks;
 import com.example.booksapp.ContentProviders.MySuggestionProvider;
+import com.example.booksapp.Fragments.FilterQuery;
 import com.example.booksapp.R;
 import com.example.booksapp.Singletons.MySingleton;
 import com.example.booksapp.database.BookDatabase;
@@ -38,8 +41,10 @@ import java.lang.ref.WeakReference;
 import java.util.Objects;
 import java.util.Vector;
 
-public class SearchBookActivity extends AppCompatActivity {
+public class SearchBookActivity extends AppCompatActivity implements FilterQuery.FilterDialogListener {
     private MyListAdapter myListAdapter;
+    String bookQuery;
+    String filteredQuery;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +55,7 @@ public class SearchBookActivity extends AppCompatActivity {
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(R.string.search_header);
 
-        String bookQuery = null;
+        bookQuery = null;
         // Gets the search query from intent
         Intent searchIntent = getIntent();
         if (searchIntent.getAction().equals(Intent.ACTION_SEARCH)) {
@@ -62,10 +67,18 @@ public class SearchBookActivity extends AppCompatActivity {
             suggestions.saveRecentQuery(bookQuery, null);
         }
 
+        filteredQuery = bookQuery;
+
         // Set up list adapter
+        setListView();
+
+
+    }
+
+    private void setListView() {
         myListAdapter = new MyListAdapter(this);
         AsyncFindBooks findBooks = new AsyncFindBooks(getResources().getString(R.string.CONSUMER_KEY), myListAdapter);
-        findBooks.execute(bookQuery);
+        findBooks.execute(filteredQuery);
         ListView listView = findViewById(R.id.found_list);
         listView.setAdapter(myListAdapter);
 
@@ -162,7 +175,7 @@ public class SearchBookActivity extends AppCompatActivity {
     }
 
     /**
-     * Function to go back to the previous activity
+     * Function to go back to the previous activity or open dialogs
      * @param item Menu Item
      * @return Boolean of success
      */
@@ -170,7 +183,44 @@ public class SearchBookActivity extends AppCompatActivity {
         if(item.getItemId() == android.R.id.home) {
             finish();
             return true;
+        } else if(item.getItemId() == R.id.action_filter) {
+                showFilterDialog();
+            return true;
         }
         return false;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.search_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    public void showFilterDialog() {
+        // Create an instance of the dialog fragment and show it
+        DialogFragment dialog = new FilterQuery();
+        dialog.show(getSupportFragmentManager(), "FilterQuery");
+    }
+
+    // The dialog fragment receives a reference to this Activity through the
+    // Fragment.onAttach() callback, which it uses to call the following methods
+    // defined by the NoticeDialogFragment.NoticeDialogListener interface
+
+    @Override
+    public void onFilterDialogClick(DialogFragment dialog, String selection) {
+        switch (selection) {
+            case "Both":
+                filteredQuery = bookQuery;
+                break;
+            case "Author":
+                filteredQuery = "inauthor:" + bookQuery;
+                filteredQuery = filteredQuery.replace(" ", "+inauthor:");
+                break;
+            case "Title":
+                filteredQuery = "intitle:" + bookQuery;
+                filteredQuery = filteredQuery.replace(" ", "+intitle:");
+                break;
+        }
+        setListView();
     }
 }
