@@ -55,7 +55,6 @@ public class SearchBookActivity extends AppCompatActivity implements FilterQuery
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(R.string.search_header);
 
-        bookQuery = null;
         // Gets the search query from intent
         Intent searchIntent = getIntent();
         if (searchIntent.getAction().equals(Intent.ACTION_SEARCH)) {
@@ -71,10 +70,11 @@ public class SearchBookActivity extends AppCompatActivity implements FilterQuery
 
         // Set up list adapter
         setListView();
-
-
     }
 
+    /**
+     * Sets up the list adapter and attaches it to the ListView
+     */
     private void setListView() {
         myListAdapter = new MyListAdapter(this);
         AsyncFindBooks findBooks = new AsyncFindBooks(getResources().getString(R.string.CONSUMER_KEY), myListAdapter);
@@ -196,18 +196,17 @@ public class SearchBookActivity extends AppCompatActivity implements FilterQuery
         return super.onCreateOptionsMenu(menu);
     }
 
+    /**
+     * Create an instance of the filter dialog fragment and show it
+     */
     public void showFilterDialog() {
-        // Create an instance of the dialog fragment and show it
         DialogFragment dialog = new FilterQuery();
         dialog.show(getSupportFragmentManager(), "FilterQuery");
     }
 
-    // The dialog fragment receives a reference to this Activity through the
-    // Fragment.onAttach() callback, which it uses to call the following methods
-    // defined by the NoticeDialogFragment.NoticeDialogListener interface
-
     @Override
     public void onFilterDialogClick(DialogFragment dialog, String selection) {
+        // Changes the query based on filter selection
         switch (selection) {
             case "Both":
                 filteredQuery = bookQuery;
@@ -221,6 +220,7 @@ public class SearchBookActivity extends AppCompatActivity implements FilterQuery
                 filteredQuery = filteredQuery.replace(" ", "+intitle:");
                 break;
         }
+        //Reloads the listview and queries the API again
         setListView();
     }
 }
