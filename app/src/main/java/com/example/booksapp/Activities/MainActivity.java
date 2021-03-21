@@ -30,6 +30,9 @@ import java.util.Vector;
 
 import static androidx.core.text.HtmlCompat.FROM_HTML_MODE_COMPACT;
 
+/**
+ * Activity handling bookshelf and link to other activities
+ */
 public class MainActivity extends AppCompatActivity {
     private MyGridAdapter myGridAdapter;
 

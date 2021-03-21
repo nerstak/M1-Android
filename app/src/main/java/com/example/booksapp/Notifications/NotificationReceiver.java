@@ -19,7 +19,9 @@ import com.example.booksapp.database.DatabaseUtilities;
 import java.util.List;
 import java.util.Random;
 
-
+/**
+ * Broadcast notifications
+ */
 public class NotificationReceiver extends BroadcastReceiver {
     private static final int NOTIFICATION_ID = 100;
     private Context context;

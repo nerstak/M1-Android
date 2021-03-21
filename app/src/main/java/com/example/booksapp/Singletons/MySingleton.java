@@ -9,6 +9,9 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
 
+/**
+ * Singleton to handle multiple images download
+ */
 public class MySingleton {
     private static MySingleton instance;
     private RequestQueue requestQueue;

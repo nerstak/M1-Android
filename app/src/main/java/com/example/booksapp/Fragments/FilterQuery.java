@@ -12,6 +12,9 @@ import androidx.fragment.app.DialogFragment;
 
 import com.example.booksapp.R;
 
+/**
+ * Fragment to display the filtering in the search activity
+ */
 public class FilterQuery extends DialogFragment {
     public interface FilterDialogListener {
         void onFilterDialogClick(DialogFragment dialog, String selection);

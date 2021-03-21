@@ -41,6 +41,9 @@ import java.lang.ref.WeakReference;
 import java.util.Objects;
 import java.util.Vector;
 
+/**
+ * Activity for search
+ */
 public class SearchBookActivity extends AppCompatActivity implements FilterQuery.FilterDialogListener {
     private MyListAdapter myListAdapter;
     String bookQuery;
