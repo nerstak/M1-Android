@@ -66,10 +66,6 @@ public class BookEntity {
         return id;
     }
 
-    public void setId(@NonNull String id) {
-        this.id = id;
-    }
-
     public String getTitle() {
         return title;
     }

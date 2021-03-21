@@ -14,14 +14,14 @@ import com.example.booksapp.R;
 
 public class FilterQuery extends DialogFragment {
     public interface FilterDialogListener {
-        public void onFilterDialogClick(DialogFragment dialog, String selection);
+        void onFilterDialogClick(DialogFragment dialog, String selection);
     }
 
     // Use this instance of the interface to deliver action events
     FilterDialogListener listener;
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         // Verify that the host activity implements the callback interface
         try {

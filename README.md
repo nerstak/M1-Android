@@ -2,13 +2,13 @@
 
 ## Table of contents
 
-- [Informations](#Informations)
+- [Information](#Information)
 
 - [Features](#Features)
 
 - [Installation](#Installation)
 
-## Informations
+## Information
 
 ### Description
 
@@ -43,7 +43,7 @@ They can :
 - update the reading progress (unknown, reading, on hold, re-reading, dropped, plan to read, done)
 - update the number of pages read
 - rate the book
-- be notified with book recomendations and more
+- be notified with book recommendations and more
 
 ## Installation
 
