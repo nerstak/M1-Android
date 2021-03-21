@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="status_array">
+        <item>Unknown</item>
+        <item>Reading</item>
+        <item>On hold</item>
+        <item>Plan to read</item>
+        <item>Dropped</item>
+        <item>Re-reading</item>
+        <item>Done</item>
+    </string-array>
+    <string-array name="rating_array">
+        <item>Unrated</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+    </string-array>
+    <string-array name="query_filter">
+        <item>Title</item>
+        <item>Author</item>
+        <item>Both</item>
+    </string-array>
+    <string-array name="language_filter">
+        <item>French</item>
+        <item>English</item>
+        <item>Spanish</item>
+        <item>German</item>
+        <item>Italian</item>
+    </string-array>
+</resources>

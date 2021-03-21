@@ -9,6 +9,7 @@
     <string name="plus">+</string>
     <string name="minus">-</string>
     <string name="action_delete_book">Delete book</string>
+    <string name="action_filter">Filter Results</string>
     <string name="date_format">Publication: %1s</string>
     <string name="search_hint">Book Info - eg. "Harry Potter"</string>
     <string name="search_desc">Search: </string>
@@ -19,4 +20,5 @@
     <string name="cover_button">Add Cover</string>
     <string name="channel_name">Notification Channel</string>
     <string name="channel_desc">Channel for book notifications.</string>
+    <string name="filter_title">Search by</string>
 </resources>
