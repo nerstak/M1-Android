@@ -11,6 +11,9 @@ import com.example.booksapp.database.DatabaseUtilities;
 import java.lang.ref.WeakReference;
 import java.util.List;
 
+/**
+ * Get books from database
+ */
 public class AsyncReadingMyBooks extends AsyncTask<Void, Void, List<BookEntity>> {
     private final MainActivity.MyGridAdapter myGridAdapter;
     private final WeakReference<Context> contextWeakReference;

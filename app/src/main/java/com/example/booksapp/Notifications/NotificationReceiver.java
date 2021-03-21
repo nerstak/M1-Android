@@ -19,7 +19,9 @@ import com.example.booksapp.database.DatabaseUtilities;
 import java.util.List;
 import java.util.Random;
 
-
+/**
+ * Broadcast notifications
+ */
 public class NotificationReceiver extends BroadcastReceiver {
     private static final int NOTIFICATION_ID = 100;
     private Context context;
@@ -69,7 +71,7 @@ public class NotificationReceiver extends BroadcastReceiver {
      */
     private Notification buildNotification(Context context, PendingIntent pendingIntent) {
         NotificationCompat.Builder builder =
-                (NotificationCompat.Builder) new NotificationCompat.Builder(context, "CHANNEL_ID")
+                new NotificationCompat.Builder(context, "CHANNEL_ID")
                         .setContentIntent(pendingIntent)
                         .setSmallIcon(R.drawable.ic_icon_app)
                         .setContentTitle(title)

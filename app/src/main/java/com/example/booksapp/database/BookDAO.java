@@ -19,9 +19,6 @@ public interface BookDAO {
     @Query("SELECT * FROM bookentity WHERE status IN ('Plan to read','On hold')")
     List<BookEntity> getAllUnread();
 
-    @Query("SELECT * FROM bookentity WHERE title LIKE :title")
-    BookEntity findByName(String title);
-
     @Query("SELECT * FROM bookentity WHERE id = :id")
     BookEntity findByID(String id);
 
@@ -30,9 +27,6 @@ public interface BookDAO {
 
     @Delete
     void delete(BookEntity book);
-
-    @Query("DELETE FROM bookentity WHERE id = :idBook")
-    void delete(String idBook);
 
     @Update
     void update(BookEntity bookEntity);

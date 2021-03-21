@@ -314,7 +314,7 @@ public class ActivityBook extends AppCompatActivity {
 
     /**
      * Rotates an image based on Exif information
-     * Images uploaded from galery may be incorrectly rotated by bitmapFactory since their Exif data is ignored
+     * Images uploaded from gallery may be incorrectly rotated by bitmapFactory since their Exif data is ignored
      * @param bitmap image to rotate
      * @return rotated image
      * @throws IOException error in file access

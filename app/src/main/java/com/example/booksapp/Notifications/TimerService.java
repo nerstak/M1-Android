@@ -14,6 +14,9 @@ import com.example.booksapp.R;
 import java.util.Timer;
 import java.util.TimerTask;
 
+/**
+ * Schedule notifications
+ */
 public class TimerService extends Service {
     private Timer timer;
 
